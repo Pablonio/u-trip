@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const response = await resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
+        from: 'Acme <pblvmunoz@gmail.com>',
         to: [contactoRecuperacion],
         subject: 'Recuperación de Cuenta',
         html: '<p>Haz clic <a href="enlace_a_tu_recuperacion">aquí</a> para recuperar tu cuenta.</p>',
