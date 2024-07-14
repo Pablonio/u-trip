@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import ToggleDarkWhite from './ToggleDarkWhite';
-import { sendRecoveryEmail } from '../../../actions/actionSendEmail'; 
+import axios from 'axios'; // Asegúrate de tener axios instalado
 
 type FormData = {
   nombre: string;
@@ -48,11 +48,20 @@ export default function Registro() {
     if (esRegistro) {
       console.log('Registro:', formData);
     } else if (recuperar) {
-      const response = await sendRecoveryEmail(formData2.contactoRecuperacion);
-      if (response.success) {
-        setMensaje('Correo de recuperación enviado con éxito.');
-      } else {
-        setMensaje('Error al enviar el correo: ' + response.error);
+      try {
+        const response = await axios.post('/api/recuperar/resendEmail', {
+          contactoRecuperacion: formData2.contactoRecuperacion,
+        });
+        console.log('Respuesta:', response.data);
+
+        if (response.data.success) {
+          setMensaje('Correo de recuperación enviado con éxito.');
+        } else {
+          setMensaje('Error al enviar el correo: ' + response.data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setMensaje('Error al enviar el correo: ' + error);
       }
     } else {
       console.log('Inicio de Sesión');
@@ -94,6 +103,7 @@ export default function Registro() {
                   type="email"
                   placeholder="Email"
                   required
+                  onChange={handleChange}
                 />
               </div>
               <div className="mb-4">
@@ -106,6 +116,7 @@ export default function Registro() {
                   type="password"
                   placeholder="Contraseña"
                   required
+                  onChange={handleChange}
                 />
               </div>
             </>
