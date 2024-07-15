@@ -6,14 +6,25 @@ const resend = new Resend(API_KEY);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { contactoRecuperacion } = req.body;
+    const { contactoRecuperacion, enlaceRecuperacion } = req.body;
 
     try {
       const response = await resend.emails.send({
-        from: 'Acme <admin@u-trip.online>',
+        from: 'Support U-Trip <admin@u-trip.online>',
         to: [contactoRecuperacion],
         subject: 'Recuperación de Cuenta',
-        html: '<p>Haz clic <a href="enlace_a_tu_recuperacion">aquí</a> para recuperar tu cuenta.</p>',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #dddddd; border-radius: 10px;">
+            <h1 style="color: #2c3e50; text-align: center;">u-trip</h1>
+            <p style="font-size: 16px; color: #555555;">Hola,</p>
+            <p style="font-size: 16px; color: #555555;">Recibimos una solicitud para recuperar tu cuenta. Por favor, haz clic en el enlace a continuación para restablecer tu contraseña:</p>
+            <p style="text-align: center;">
+              <a href="${enlaceRecuperacion}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px;">Recuperar Cuenta</a>
+            </p>
+            <p style="font-size: 16px; color: #555555;">Si no solicitaste restablecer tu contraseña, por favor ignora este correo electrónico.</p>
+            <p style="font-size: 16px; color: #555555;">Gracias,<br/>El equipo de u-trip</p>
+          </div>
+        `,
       });
       return res.status(200).json({ success: true, response });
     } catch (error: unknown) {

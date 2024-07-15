@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
+import Cookie from 'js-cookie';
+import { useRouter } from 'next/router';
 import { useTheme } from '../context/ThemeContext';
-import PantallaCelular from './Paginas/PantallaCelular';
-import PantallaTablet from './Paginas/PantallaTablet';
-import PantallaDesktop from './Paginas/PantallaDesktop';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
   const { theme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
-  const isDesktop = useMediaQuery({ minWidth: 1025 });
+    const rol = 'INCOGNITO';
+    Cookie.set('rol', rol);
+    router.push('/Paginas');
+  }, [router]);
 
   if (!mounted) {
     return null;
@@ -23,11 +21,7 @@ export default function Home() {
 
   return (
     <main className={`w-full h-screen ${theme === 'dark' ? 'dark' : ''}`}>
-      <div className="bg-white dark:bg-black text-black dark:text-white">
-        {isMobile && <PantallaCelular />}
-        {isTablet && <PantallaTablet />}
-        {isDesktop && <PantallaDesktop />}
-      </div>
+      <p>Redirecting...</p>
     </main>
   );
 }

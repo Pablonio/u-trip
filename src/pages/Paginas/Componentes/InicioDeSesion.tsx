@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import ToggleDarkWhite from './ToggleDarkWhite';
-import axios from 'axios'; // Asegúrate de tener axios instalado
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 type FormData = {
   nombre: string;
@@ -19,6 +21,7 @@ export default function Registro() {
   const [esRegistro, setRegistro] = useState(false);
   const [recuperar, setRecuperar] = useState(false);
   const [mensaje, setMensaje] = useState('');
+  
 
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
@@ -32,6 +35,8 @@ export default function Registro() {
     contactoRecuperacion: '',
     codigoRecuperacion: '',
   });
+  const rol = 'INCOGNITO'
+  Cookies.set('rol', rol)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -47,7 +52,7 @@ export default function Registro() {
     e.preventDefault();
     if (esRegistro) {
       console.log('Registro:', formData);
-    } else if (recuperar) {
+    } else if (recuperar && rol === 'INCOGNITO') {
       try {
         const response = await axios.post('/api/recuperar/resendEmail', {
           contactoRecuperacion: formData2.contactoRecuperacion,
