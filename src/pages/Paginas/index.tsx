@@ -18,11 +18,14 @@ export default function Home() {
     return null;
   }
 
+
+
   return (
     <div className="bg-white dark:bg-black text-black dark:text-white">
       {isMobile && <PantallaCelular />}
       {isTablet && <PantallaTablet />}
       {isDesktop && <PantallaDesktop />}
+
     </div>
   );
 }
