@@ -18,9 +18,10 @@ model Usuario {
   apellido         String
   email            String    @unique
   contrasena       String
-  telefono         String?
+  confirmarContrasena String
+  telefono         String?   @unique
   direccion        String?
-  fechaNacimiento  DateTime
+  fechaNacimiento  DateTime?
   rol              Rol       @default(TURISTA)
   fechaCreacion    DateTime  @default(now())
   recuperacionContrasena RecuperacionContrasena[]
@@ -37,9 +38,10 @@ model RecuperacionContrasena {
   id           Int       @id @default(autoincrement())
   usuarioId    Int
   usuario      Usuario   @relation(fields: [usuarioId], references: [id])
-  codigoRecuperacionRecibidaResend   String
-  contactoRecuperacion String?
+  codigoRecuperacionRecibidaResend   String  @unique
+  contactoRecuperacion String  
   codigoRecuperacion   String?
+  contraseUtilizada Boolean @default(false)
 }
 
 

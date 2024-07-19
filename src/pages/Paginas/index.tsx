@@ -25,7 +25,6 @@ export default function Home() {
       {isMobile && <PantallaCelular />}
       {isTablet && <PantallaTablet />}
       {isDesktop && <PantallaDesktop />}
-
     </div>
   );
 }

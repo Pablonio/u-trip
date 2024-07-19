@@ -1,7 +1,4 @@
 //Aqui creamos un archivo de mensajes de 2fa de la propia aplicación
-
-import { json } from "stream/consumers";
-
 export default function ramdonAuthMessages() {
 
     const codigos2FA = {
@@ -19,15 +16,22 @@ export default function ramdonAuthMessages() {
     function generate2FACode(): string {
         let code: string = '';
         code += getRandomElement(codigos2FA.codigonumero);
-        code += getRandomElement(codigos2FA.codigonumero);
         code += getRandomElement(codigos2FA.codigoletrasmin);
-        code += getRandomElement(codigos2FA.codigoletrasmin);
-        code += getRandomElement(codigos2FA.codigoletrasmay);
         code += getRandomElement(codigos2FA.codigoletrasmay);
         code += getRandomElement(codigos2FA.codigosespeciales);
+        code += getRandomElement(codigos2FA.codigonumero);
+        code += getRandomElement(codigos2FA.codigoletrasmin);
+        code += getRandomElement(codigos2FA.codigoletrasmay);
+        code += getRandomElement(codigos2FA.codigosespeciales);
+        code += getRandomElement(codigos2FA.codigonumero);
+        code += getRandomElement(codigos2FA.codigoletrasmin);
+        code += getRandomElement(codigos2FA.codigoletrasmay);
+        code += getRandomElement(codigos2FA.codigosespeciales);
+        code += getRandomElement(codigos2FA.codigonumero);
+        code += getRandomElement(codigos2FA.codigoletrasmin);
+        code += getRandomElement(codigos2FA.codigoletrasmay);
         code += getRandomElement(codigos2FA.codigosespeciales);
         return code.toString();
     };
-
     return generate2FACode();
 }
