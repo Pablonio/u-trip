@@ -21,10 +21,17 @@ export default function Recuperar() {
     e.preventDefault();
     console.log('Recuperar:', formData);
     try {
-      const response = await axios.post('/api/recover', formData);
+      const response = await axios.post('/api/recuperar/comprobar', formData);
       console.log('Response:', response.data);
+      if (!response.data.success) {
+        alert(response.data.error || 'Error desconocido');
+      } else {
+        alert('Código de recuperación válido');
+        // Redirigir o mostrar mensaje de éxito
+      }
     } catch (error) {
       console.error('Error:', error);
+      alert('Error al recuperar cuenta');
     }
   };
 

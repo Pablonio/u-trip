@@ -41,7 +41,7 @@ model RecuperacionContrasena {
   codigoRecuperacionRecibidaResend   String  @unique
   contactoRecuperacion String  
   codigoRecuperacion   String?
-  contraseUtilizada Boolean @default(false)
+  contrasenafueutilizada Boolean @default(false)
 }
 
 

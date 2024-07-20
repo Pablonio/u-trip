@@ -69,22 +69,16 @@ export default function Registro() {
       
 
     } else if (recuperar && rol === 'INCOGNITO') {
-      try {
         const ramdon = ramdonAuthMessages();
         const response = await axios.post('/api/recuperar/resendEmail', {
           contactoRecuperacion: formData2.contactoRecuperacion,
-          ramdon: ramdon,
+          ramdon: ramdon
         });
-
-        if (response.data.success) {
-          setMensaje('Correo de recuperación enviado con éxito.');
-        } else {
+        if(response.data ) {
+          router.push('/Paginas/Recuperar');
+        } else if(response.data.error) {
           setMensaje('Error al enviar el correo: ' + response.data.error);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        setMensaje('Error al enviar el correo: ' );
-      }
+        } 
     } else {
       //Envio por axios los datos del formulario      
       const response = await axios.post('/api/iniciosesion/inicioSesion', {
