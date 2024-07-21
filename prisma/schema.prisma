@@ -33,8 +33,15 @@ model Usuario {
   recuperacionContrasena RecuperacionContrasena[]
   publicaciones        Publicacion[]
   reacciones           Reacciones[]
+  reaccionesComentario ReaccionesComentario[]
   comentarios          Comentario[]
   reservas Reserva[]
+  flag Estado @default(Nuevo)
+}
+
+enum Estado {
+  Eliminado
+  Nuevo
 }
 
 enum Rol {
@@ -56,6 +63,7 @@ model RecuperacionContrasena {
   codigoRecuperacion   String?
   //(*)Cambia a estado true al ser utilizada en la api comprobar
   contrasenafueutilizada Boolean @default(false)
+  flag Estado @default(Nuevo)
 }
 
 model Publicacion{
@@ -65,13 +73,13 @@ model Publicacion{
   Imagen Imagen[]
   tituloPost String
   fechaPublicacion  DateTime  @default(now())
-  emogisParaReaccionarPublicacion emogis[]  @relation("Publicacion")
-  emogisParaComentarPublicacion emogis[]  @relation("Comentario")
+  emogisParaReaccionarPublicacion Emogis[]
   reacciones Reacciones[]
+  reaccionesComentario ReaccionesComentario[]
   comentarios Comentario[]
   reservas Reserva[]
   lugaresTuristicos LugarTuristico[]
-
+  flag Estado @default(Nuevo)
 }
 
 model Comentario{
@@ -81,16 +89,34 @@ model Comentario{
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   texto String
-  reacciones Reacciones[]
+  reaccionesComentario ReaccionesComentario[]
+  comentariosDeComentario ComentariosDeComentario[]
+  flag Estado @default(Nuevo)
 }
 
-model emogis{
+model ComentariosDeComentario{
+  id Int @id @default(autoincrement())
+  idComentario Int
+  comentario Comentario @relation(fields: [idComentario], references: [id])
+  respuesta String
+  flag Estado @default(Nuevo)
+}
+
+model Emogis{
   id Int @id @default(autoincrement())
   idPublicacion Int
-  publicacion Publicacion @relation("Publicacion", fields: [idPublicacion], references: [id])
-  idComentario Int
-  comentario Publicacion @relation("Comentario", fields: [idComentario], references: [id])
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  emogiComentario EmogisComentario[]
   emogi String
+  flag Estado @default(Nuevo)
+}
+
+model EmogisComentario{
+  id Int @id @default(autoincrement())
+  idEmogi Int
+  emogi Emogis @relation( fields: [idEmogi], references: [id])
+  emogiComentario String
+  flag Estado @default(Nuevo)
 }
 
 model Imagen{
@@ -100,18 +126,31 @@ model Imagen{
   url String
   tituloImg String?
   fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
 }
 
 model Reacciones{
   id Int @id @default(autoincrement())
-  idPost Int
-  post Publicacion @relation(fields: [idPost], references: [id])
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  reaccion String
+  fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
+}
+
+model ReaccionesComentario{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   idComentario Int
   comentario Comentario @relation( fields: [idComentario], references: [id])
   reaccion String
   fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
 }
 
 model Solicitud {
@@ -123,6 +162,7 @@ model Solicitud {
   idUsuarioAcepta   Int
   aceptasolicitud    Usuario       @relation("AceptaSolicitud", fields: [idUsuarioAcepta], references: [id])
   estado EstadoSeguido @default(ANADIR)
+  flag Estado @default(Nuevo)
 }
 
 enum EstadoSeguido {
@@ -145,6 +185,7 @@ model LugarTuristico{
   ciudad       String
   pais         String
   provincia    String
+  flag Estado @default(Nuevo)
 }
 
 model Reserva{
@@ -156,6 +197,7 @@ model Reserva{
   estado EstadoReserva @default(DISPONIBLE)
   itinerarios Itinerarios[]
   fechaReserva DateTime @default(now())
+  flag Estado @default(Nuevo)
 }
 
 enum EstadoReserva {
@@ -174,6 +216,7 @@ model Itinerarios{
   descripcion String
   fechaInicio DateTime
   fechaFin DateTime
+  flag Estado @default(Nuevo)
 }
 
 

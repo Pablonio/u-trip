@@ -52,7 +52,7 @@ export default function Registro() {
     e.preventDefault();
     if (esRegistro) {
       //Envio por axios los datos del formulario
-      const response = await axios.post('/api/iniciosesion/registrar', {
+      const response = await axios.post('/api/Usuario/registrarUsuario', {
         nombre: formData.nombre,
         apellido: formData.apellido,
         email: formData.email,
@@ -70,7 +70,7 @@ export default function Registro() {
 
     } else if (recuperar && rol === 'INCOGNITO') {
         const ramdon = ramdonAuthMessages();
-        const response = await axios.post('/api/recuperar/resendEmail', {
+        const response = await axios.post('/api/RecuperacionContrasena/enviarEmail', {
           contactoRecuperacion: formData2.contactoRecuperacion,
           ramdon: ramdon
         });
@@ -81,7 +81,7 @@ export default function Registro() {
         } 
     } else {
       //Envio por axios los datos del formulario      
-      const response = await axios.post('/api/iniciosesion/inicioSesion', {
+      const response = await axios.post('/api/Usuario/inicioSesionUsuario', {
         email: formData.email,
         contrasena: formData.contraseña,
       });

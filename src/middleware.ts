@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     INCOGNITO: ['/Paginas', '/Paginas/Recuperar'],
     TURISTA: ['/Paginas/Turista'],
     GUIA: ['/Paginas/Guia'],
-    ADMINISTRADOR: ['/Paginas/Administrador'],
+    ADMINISTRADOR: ['/Paginas/Administrador', '/Paginas/Administrador/Usuarios', '/Paginas/Administrador/Itinerarios', '/Paginas/Administrador/Reservas'],
     BANEADO: ['/Baneado'],
   };
 
