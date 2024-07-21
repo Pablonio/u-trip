@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
     if (!usuario) {
-      return res.status(400).json({ success: false, error: 'No existe el usuario' });
+      return res.status(400).json({ success: false, error: 'No existe el usuario (papi)' });
     }
     await db.recuperacionContrasena.create({
       data: {

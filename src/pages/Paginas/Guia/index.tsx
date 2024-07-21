@@ -1,9 +1,10 @@
 import React from "react";
+import Layout from '../Guia/Componentes/Layout';
 
 export default function Guia() {
   return (
     <div>
-      <h1>Guia</h1>
+      <Layout />
     </div>
   );
 }
