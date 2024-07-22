@@ -3,16 +3,15 @@ import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { idPublicacion, idUsuario, reaccion } = req.body;
+    const { idEmogi } = req.body;
 
-    const reacciones = await db.reacciones.findMany({
+    const emogisDeComentarios = await db.emogisComentario.findMany({
       where: {
-        idPublicacion: idPublicacion,
-        idUsuario: idUsuario
+        idEmogi: idEmogi,
       }
     });
 
-    return res.status(200).json({ success: true, response: reacciones });
+    return res.status(200).json({ success: true, response: emogisDeComentarios });
   } else {
     return res.status(405).json({ error: 'Método no permitido' });
   }

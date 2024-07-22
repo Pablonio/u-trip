@@ -2,18 +2,19 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { idPublicacion, idUsuario, reaccion } = req.body;
+  if (req.method === 'PATCH') {
+    const { idReaccionComentario, reaccion } = req.body;
 
-    const reacciones = await db.reacciones.create({
+    const reaccionesComentario = await db.reaccionesComentario.update({
+      where: {
+        id: idReaccionComentario
+      },
       data: {
-        idPublicacion: idPublicacion,
-        idUsuario: idUsuario,
         reaccion: reaccion
       }
     });
 
-    return res.status(200).json({ success: true, response: reacciones });
+    return res.status(200).json({ success: true, response: reaccionesComentario });
   } else {
     return res.status(405).json({ error: 'Método no permitido' });
   }

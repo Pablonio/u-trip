@@ -22,7 +22,7 @@ model Usuario {
   telefono             String?       @unique
   direccion            String?
   fechaNacimiento      DateTime?
-  fotoProfile          String?
+  fotoPerfil          String?
   rol                  Rol           @default(TURISTA)
   fechaCreacion        DateTime      @default(now())
   //(*)Esta relaciona las solicitudes enviadas con el usuario

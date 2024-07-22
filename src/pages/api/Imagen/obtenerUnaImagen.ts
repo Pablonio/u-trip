@@ -3,17 +3,16 @@ import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { idPublicacion, idUsuario, reaccion } = req.body;
+    const { idImagen } = req.body;
 
-    const reacciones = await db.reacciones.findMany({
+    const imagen = await db.imagen.findUnique({
       where: {
-        idPublicacion: idPublicacion,
-        idUsuario: idUsuario
+        id: idImagen
       }
     });
 
-    return res.status(200).json({ success: true, response: reacciones });
+    return res.status(200).json({ success: true, response: imagen });
   } else {
     return res.status(405).json({ error: 'Método no permitido' });
   }
-}
+}   

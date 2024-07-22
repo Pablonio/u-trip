@@ -1,4 +1,3 @@
-
 import React from "react";
 import { AiOutlineTeam } from "react-icons/ai";
 import { AiTwotoneReconciliation } from "react-icons/ai";
@@ -8,9 +7,8 @@ interface NavBarProps {
     handleNavbar: (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
-
 export default function NavBar({ handleNavbar }: NavBarProps) {
-
+//Agregar mas opciones para el administrador con este formato.
     const arrayNavBar = [
         {
             id: "Usuarios",
@@ -29,9 +27,11 @@ export default function NavBar({ handleNavbar }: NavBarProps) {
         }
     ];
     return (
+        //Contenedores.
+        //El arrayNavBar permite rescatar el contenido almacenado y mostrarlo uno por uno.
         <div className='h-screen w-full bg-white relative flex overflow-hidden'>
             <aside className='w-64 h-screen bg-gray-900 text-white p-4'>
-                <div className='flex flex-col space-y-5'>
+                <div className='flex flex-col space-y-5'> 
                     {arrayNavBar.map((item, index) => (
                         <div key={index} className='flex items-center space-x-3 p-3 rounded-md hover:bg-gray-700 cursor-pointer transition duration-150 ease-in-out'>
                             {item.icon}

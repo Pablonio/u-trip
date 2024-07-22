@@ -1,17 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {db} from '../../../lib/lib'
+import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { nombre, apellido, email, contrasena, confirmarContrasena } = req.body;
+    const { direccion, fechaNacimiento,fotoPerfil, telefono, id } = req.body;
 
-    const usuario = await db.usuario.create({
+    const usuario = await db.usuario.update({
+      where: {
+        id: id
+      },
       data: {
-        nombre: nombre,
-        apellido: apellido,
-        email: email,
-        contrasena: contrasena,
-        confirmarContrasena: contrasena,
+        direccion: direccion,
+        fechaNacimiento: fechaNacimiento,
+        fotoPerfil: fotoPerfil,
+        telefono: telefono
       }
     });
 
