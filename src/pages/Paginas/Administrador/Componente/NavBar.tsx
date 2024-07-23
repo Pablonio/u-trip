@@ -29,7 +29,7 @@ export default function NavBar({ handleNavbar }: NavBarProps) {
     return (
         //Contenedores.
         //El arrayNavBar permite rescatar el contenido almacenado y mostrarlo uno por uno.
-        <div className='h-screen w-full bg-white relative flex overflow-hidden'>
+        <div className='h-screen bg-white relative flex overflow-hidden'>
             <aside className='w-64 h-screen bg-gray-900 text-white p-4'>
                 <div className='flex flex-col space-y-5'> 
                     {arrayNavBar.map((item, index) => (

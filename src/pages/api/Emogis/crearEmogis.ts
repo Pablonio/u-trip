@@ -4,15 +4,13 @@ import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { idPublicacion, emogi } = req.body;
+        const { idPublicacion, emogiNombre } = req.body;
 
-        // Decodificar emoji
-        const decodedEmogi = decodeURIComponent(emogi);
 
         const emogis = await db.emogis.create({
             data: {
                 idPublicacion: idPublicacion,
-                emogi: decodedEmogi
+                emogi: emogiNombre
             }
         });
 
