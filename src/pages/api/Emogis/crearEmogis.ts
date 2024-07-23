@@ -1,15 +1,18 @@
-//craer emogi de una publicacion
+
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '../../../lib/lib'; // Asegúrate de que esta ruta sea correcta
+import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { idPublicacion, idEmogi, emogi } = req.body;
+        const { idPublicacion, emogi } = req.body;
+
+        // Decodificar emoji
+        const decodedEmogi = decodeURIComponent(emogi);
 
         const emogis = await db.emogis.create({
             data: {
                 idPublicacion: idPublicacion,
-                emogi: emogi
+                emogi: decodedEmogi
             }
         });
 
@@ -18,4 +21,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ error: 'Método no permitido' });
     }
 }
-        

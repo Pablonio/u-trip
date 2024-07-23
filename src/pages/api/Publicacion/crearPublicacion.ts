@@ -3,13 +3,12 @@ import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { idUsuario, tituloPost, fechaPublicacion } = req.body;
+    const { idUsuario, tituloPost} = req.body;
 
     const publicacion = await db.publicacion.create({
       data: {
         idUsuario: idUsuario,
-        tituloPost: tituloPost,
-        fechaPublicacion: fechaPublicacion
+        tituloPost: tituloPost
       }
     });
 

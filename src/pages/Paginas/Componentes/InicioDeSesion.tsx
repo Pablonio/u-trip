@@ -90,7 +90,9 @@ export default function Registro() {
       if (response.data.success) {
         setMensaje('Inicio de sesión exitoso');
         const rolNuevo = response.data.response.rol;
+        const idUsuario = response.data.response.id;
         Cookies.set('rol', rolNuevo);
+        Cookies.set('idUsuario', idUsuario);
         router.push('/Paginas/Turista');
       } else {
         setMensaje('Error al iniciar sesión: ' + response.data.error);

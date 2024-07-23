@@ -71,7 +71,7 @@ model Publicacion{
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   Imagen Imagen[]
-  tituloPost String
+  tituloPost String?
   fechaPublicacion  DateTime  @default(now())
   emogisParaReaccionarPublicacion Emogis[]
   reacciones Reacciones[]
@@ -177,14 +177,14 @@ model LugarTuristico{
   id Int @id @default(autoincrement())
   idPublicacion Int
   publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
-  latitud      Float
-  longitud     Float
-  Departamento String
-  barrio       String
-  calle        String
-  ciudad       String
-  pais         String
-  provincia    String
+  latitud      Float?
+  longitud     Float?
+  Departamento String?
+  barrio       String?
+  calle        String?
+  ciudad       String?
+  pais         String?
+  provincia    String?
   flag Estado @default(Nuevo)
 }
 
