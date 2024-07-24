@@ -3,6 +3,7 @@ import { AiTwotoneReconciliation, AiTwotoneSchedule } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
 import PerfilUsuario from './Componentes/panel';
+import PaginaPublicacion from './Componentes/verpublicaciones';
 
 export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
