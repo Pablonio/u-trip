@@ -1,0 +1,18 @@
+-- AlterTable
+ALTER TABLE "Comentario" ADD COLUMN     "fechaPublicacion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "ComentariosDeComentario" ADD COLUMN     "fechaPublicacion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "LugarTuristico" ALTER COLUMN "latitud" DROP NOT NULL,
+ALTER COLUMN "longitud" DROP NOT NULL,
+ALTER COLUMN "Departamento" DROP NOT NULL,
+ALTER COLUMN "barrio" DROP NOT NULL,
+ALTER COLUMN "calle" DROP NOT NULL,
+ALTER COLUMN "ciudad" DROP NOT NULL,
+ALTER COLUMN "pais" DROP NOT NULL,
+ALTER COLUMN "provincia" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Publicacion" ALTER COLUMN "tituloPost" DROP NOT NULL;

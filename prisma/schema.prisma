@@ -77,7 +77,7 @@ model Publicacion{
   reacciones Reacciones[]
   reaccionesComentario ReaccionesComentario[]
   comentarios Comentario[]
-  reservas Reserva[]
+  paquetesPaqueteTuristico PaqueteTuristico[]
   lugaresTuristicos LugarTuristico[]
   flag Estado @default(Nuevo)
 }
@@ -89,6 +89,7 @@ model Comentario{
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   texto String
+  fechaPublicacion DateTime @default(now())
   reaccionesComentario ReaccionesComentario[]
   comentariosDeComentario ComentariosDeComentario[]
   flag Estado @default(Nuevo)
@@ -97,6 +98,7 @@ model Comentario{
 model ComentariosDeComentario{
   id Int @id @default(autoincrement())
   idComentario Int
+  fechaPublicacion DateTime @default(now())
   comentario Comentario @relation(fields: [idComentario], references: [id])
   respuesta String
   flag Estado @default(Nuevo)
@@ -188,12 +190,23 @@ model LugarTuristico{
   flag Estado @default(Nuevo)
 }
 
+model PaqueteTuristico{
+  id Int @id @default(autoincrement())
+  nombre String
+  idreserva Reserva[]
+  fechaInicio DateTime
+  fechaFin DateTime
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  flag Estado @default(Nuevo)
+}
+
 model Reserva{
   id Int @id @default(autoincrement())
   idUsuario Int
+  idPaquete Int
+  paquete PaqueteTuristico @relation(fields: [idPaquete], references: [id])
   usuario Usuario @relation(fields: [idUsuario], references: [id])
-  idPublicacion Int
-  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
   estado EstadoReserva @default(DISPONIBLE)
   itinerarios Itinerarios[]
   fechaReserva DateTime @default(now())

@@ -8,7 +8,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const publicaciones = await db.publicacion.findMany({
       where: {
-        idUsuario: idUsuario
+        idUsuario: idUsuario,
+        flag: 'Nuevo'
+      },
+      include:{
+        Imagen: true,
+        comentarios:{
+          include:{
+            usuario:{
+              select:{
+                nombre: true,
+                apellido: true
+              }
+            }
+          }
+        }
       }
     });
 

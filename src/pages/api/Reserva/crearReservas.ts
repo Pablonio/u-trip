@@ -3,12 +3,12 @@ import { db } from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { idUsuario, idPublicacion, estado, itinerarios, fechaReserva } = req.body;
+    const { idUsuario, idPaquete, estado, itinerarios, fechaReserva } = req.body;
 
     const reserva = await db.reserva.create({
       data: {
+        idPaquete: idPaquete,
         idUsuario: idUsuario,
-        idPublicacion: idPublicacion,
         estado: estado,
         itinerarios: itinerarios,
         fechaReserva: fechaReserva
