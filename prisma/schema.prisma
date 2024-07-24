@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+        
+model Usuario {
+  id                   Int           @id @default(autoincrement())
+  nombre               String
+  apellido             String
+  email                String        @unique
+  contrasena           String
+  confirmarContrasena  String
+  telefono             String?       @unique
+  direccion            String?
+  fechaNacimiento      DateTime?
+  fotoPerfil          String?
+  rol                  Rol           @default(TURISTA)
+  fechaCreacion        DateTime      @default(now())
+  //(*)Esta relaciona las solicitudes enviadas con el usuario
+  enviosolicitud        Solicitud[]    @relation("EnvioSolicitud")
+  //(*)Esta relaciona las solicitudes aceptadas por el usuario
+  aceptasolicitud      Solicitud[]    @relation("AceptaSolicitud")
+  //(*)Ve al modelo
+  recuperacionContrasena RecuperacionContrasena[]
+  publicaciones        Publicacion[]
+  reacciones           Reacciones[]
+  reaccionesComentario ReaccionesComentario[]
+  comentarios          Comentario[]
+  reservas Reserva[]
+  flag Estado @default(Nuevo)
+}
+
+enum Estado {
+  Eliminado
+  Nuevo
+}
+
+enum Rol {
+  TURISTA
+  GUIA
+  ADMINISTRADOR
+  BANEADO
+}
+
+model RecuperacionContrasena {
+  id           Int       @id @default(autoincrement())
+  usuarioId    Int
+  usuario      Usuario   @relation(fields: [usuarioId], references: [id])
+  //(*)Se envia por la api recuperarResend donde enviamos el ramdon que se crea en ramdonAuthMessages
+  codigoRecuperacionRecibidaResend   String  @unique
+  //(*)Se envia por la api recuperarResend donde se envia en el formulario Login y se pregunta si existe en la carpeta RecuperacionContrasena
+  contactoRecuperacion String  
+  //(*)Se envia por la api comprobar donde se comprueba si el usuario existe y si el código es correcto en relacion a codigoRecuperacionRecibidaResend
+  codigoRecuperacion   String?
+  //(*)Cambia a estado true al ser utilizada en la api comprobar
+  contrasenafueutilizada Boolean @default(false)
+  flag Estado @default(Nuevo)
+}
+
+model Publicacion{
+  id Int @id @default(autoincrement())
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  Imagen Imagen[]
+  tituloPost String?
+  fechaPublicacion  DateTime  @default(now())
+  emogisParaReaccionarPublicacion Emogis[]
+  reacciones Reacciones[]
+  reaccionesComentario ReaccionesComentario[]
+  comentarios Comentario[]
+  paquetesPaqueteTuristico PaqueteTuristico[]
+  lugaresTuristicos LugarTuristico[]
+  flag Estado @default(Nuevo)
+}
+
+model Comentario{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  texto String
+  fechaPublicacion DateTime @default(now())
+  reaccionesComentario ReaccionesComentario[]
+  comentariosDeComentario ComentariosDeComentario[]
+  flag Estado @default(Nuevo)
+}
+
+model ComentariosDeComentario{
+  id Int @id @default(autoincrement())
+  idComentario Int
+  fechaPublicacion DateTime @default(now())
+  comentario Comentario @relation(fields: [idComentario], references: [id])
+  respuesta String
+  flag Estado @default(Nuevo)
+}
+
+model Emogis{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  emogiComentario EmogisComentario[]
+  emogi String
+  flag Estado @default(Nuevo)
+}
+
+model EmogisComentario{
+  id Int @id @default(autoincrement())
+  idEmogi Int
+  emogi Emogis @relation( fields: [idEmogi], references: [id])
+  emogiComentario String
+  flag Estado @default(Nuevo)
+}
+
+model Imagen{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  post Publicacion @relation(fields: [idPublicacion], references: [id])
+  url String
+  tituloImg String?
+  fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
+}
+
+model Reacciones{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  reaccion String
+  fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
+}
+
+model ReaccionesComentario{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  idComentario Int
+  comentario Comentario @relation( fields: [idComentario], references: [id])
+  reaccion String
+  fechaPublicacion DateTime @default(now())
+  flag Estado @default(Nuevo)
+}
+
+model Solicitud {
+  id           Int           @id @default(autoincrement())
+  //(*)Esta es la id del usuario que envia la solicitud
+  idUsuarioEnvia    Int
+  enviasolicitud     Usuario       @relation("EnvioSolicitud", fields: [idUsuarioEnvia], references: [id])
+  //(*)Esta es la id del que se va a aceptar la solicitud
+  idUsuarioAcepta   Int
+  aceptasolicitud    Usuario       @relation("AceptaSolicitud", fields: [idUsuarioAcepta], references: [id])
+  estado EstadoSeguido @default(ANADIR)
+  flag Estado @default(Nuevo)
+}
+
+enum EstadoSeguido {
+  ANADIR
+  PENDIENTE
+  SEGUIDO
+  BLOQUEADO
+  DEMANDADO
+}
+
+model LugarTuristico{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  latitud      Float?
+  longitud     Float?
+  Departamento String?
+  barrio       String?
+  calle        String?
+  ciudad       String?
+  pais         String?
+  provincia    String?
+  flag Estado @default(Nuevo)
+}
+
+model PaqueteTuristico{
+  id Int @id @default(autoincrement())
+  nombre String
+  idreserva Reserva[]
+  fechaInicio DateTime
+  fechaFin DateTime
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  flag Estado @default(Nuevo)
+}
+
+model Reserva{
+  id Int @id @default(autoincrement())
+  idUsuario Int
+  idPaquete Int
+  paquete PaqueteTuristico @relation(fields: [idPaquete], references: [id])
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  estado EstadoReserva @default(DISPONIBLE)
+  itinerarios Itinerarios[]
+  fechaReserva DateTime @default(now())
+  flag Estado @default(Nuevo)
+}
+
+enum EstadoReserva {
+  DISPONIBLE
+  PENDIENTE
+  RESERVADA
+  CANCELADA
+  POSTERGADA
+}
+
+model Itinerarios{
+  id Int @id @default(autoincrement())
+  idReserva Int
+  reserva Reserva @relation(fields: [idReserva], references: [id])
+  nombre String
+  descripcion String
+  fechaInicio DateTime
+  fechaFin DateTime
+  flag Estado @default(Nuevo)
+}
+
+
+

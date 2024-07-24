@@ -16,7 +16,7 @@ export default function ToggleDarkWhite() {
         </span>
       </div>
       <span className="flex items-center justify-center w-8 h-8 text-gray-500 rounded-full p-2 transition-transform duration-300">
-        <FaMoon className="dark:text-gray-500" />
+        <FaMoon className="dark:text-black" />
       </span>
       <span
         className={`absolute left-1 bg-white dark:bg-gray-700 w-8 h-8 rounded-full shadow-md transform transition-transform duration-300 ${

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { parse } from 'cookie';
 
 export async function middleware(request: NextRequest) {
@@ -8,17 +8,17 @@ export async function middleware(request: NextRequest) {
   const role = cookies.rol as string;
 
   const protectedRoutes = {
-    INCOGNITO: '/Paginas',
-    TURISTA: '/Paginas/Turista',
-    GUIA: '/Paginas/Turista',
-    ADMINISTRADOR: '/Paginas/Administrador',
-    BANEADO: '/Baneado',
+    INCOGNITO: ['/Paginas', '/Paginas/Recuperar'],
+    TURISTA: ['/Paginas/Turista'],
+    GUIA: ['/Paginas/Guia'],
+    ADMINISTRADOR: ['/Paginas/Administrador', '/Paginas/Administrador/Usuarios', '/Paginas/Administrador/Itinerarios', '/Paginas/Administrador/Reservas'],
+    BANEADO: ['/Baneado'],
   };
 
   const userRoles: (keyof typeof protectedRoutes)[] = ['INCOGNITO', 'TURISTA', 'GUIA', 'ADMINISTRADOR', 'BANEADO'];
 
   if (!role || role === 'INCOGNITO') {
-    if (request.nextUrl.pathname === '/Paginas') {
+    if (protectedRoutes.INCOGNITO.some(route => request.nextUrl.pathname.startsWith(route))) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(new URL('/Error404', request.url));
@@ -26,17 +26,25 @@ export async function middleware(request: NextRequest) {
   }
 
   if (userRoles.includes(role as keyof typeof protectedRoutes)) {
-    const userRoute = protectedRoutes[role as keyof typeof protectedRoutes];
-    
-    if (request.nextUrl.pathname.startsWith(userRoute)) {
+    const userRoutes = protectedRoutes[role as keyof typeof protectedRoutes];
+
+    if (userRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
       return NextResponse.next();
     } else {
-      return NextResponse.redirect(new URL(userRoute, request.url));
+      return NextResponse.redirect(new URL(userRoutes[0], request.url));
     }
   }
+
   return NextResponse.redirect(new URL('/Error404', request.url));
 }
 
 export const config = {
-  matcher: ['/Paginas/:path*', '/Paginas/Turista/:path*', '/Paginas/Administrador/:path*', '/Baneado/:path*'],
+  matcher: [
+    '/Paginas/:path*',
+    '/Paginas/Recuperar/:path*',
+    '/Paginas/Turista/:path*',
+    '/Paginas/Guia/:path*',
+    '/Paginas/Administrador/:path*',
+    '/Baneado/:path*',
+  ],
 };

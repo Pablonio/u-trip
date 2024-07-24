@@ -2,7 +2,8 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import ToggleDarkWhite from './ToggleDarkWhite';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import { useRouter } from 'next/router';
+import ramdonAuthMessages from '../../../ramdonAuthMessages/ramdon';
 
 type FormData = {
   nombre: string;
@@ -14,14 +15,14 @@ type FormData = {
 
 type FormData2 = {
   contactoRecuperacion: string;
-  codigoRecuperacion: string;
 };
 
 export default function Registro() {
   const [esRegistro, setRegistro] = useState(false);
   const [recuperar, setRecuperar] = useState(false);
   const [mensaje, setMensaje] = useState('');
-  
+
+  const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
@@ -33,10 +34,9 @@ export default function Registro() {
 
   const [formData2, setFormData2] = useState<FormData2>({
     contactoRecuperacion: '',
-    codigoRecuperacion: '',
   });
-  const rol = 'INCOGNITO'
-  Cookies.set('rol', rol)
+
+  const rol = Cookies.get('rol');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -51,25 +51,52 @@ export default function Registro() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (esRegistro) {
-      console.log('Registro:', formData);
-    } else if (recuperar && rol === 'INCOGNITO') {
-      try {
-        const response = await axios.post('/api/recuperar/resendEmail', {
-          contactoRecuperacion: formData2.contactoRecuperacion,
-        });
-        console.log('Respuesta:', response.data);
+      //Envio por axios los datos del formulario
+      const response = await axios.post('/api/Usuario/registrarUsuario', {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        email: formData.email,
+        contrasena: formData.contraseña,
+        confirmarContrasena: formData.contraseña,
+      });
+      console.log('Respuesta:', response.data);
 
-        if (response.data.success) {
-          setMensaje('Correo de recuperación enviado con éxito.');
-        } else {
-          setMensaje('Error al enviar el correo: ' + response.data.error);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        setMensaje('Error al enviar el correo: ' + error);
+      if (response.data.success) {
+        setMensaje('Registro exitoso');
+      } else {
+        setMensaje('Error al registrar: ' + response.data.error);
       }
+      
+
+    } else if (recuperar && rol === 'INCOGNITO') {
+        const ramdon = ramdonAuthMessages();
+        const response = await axios.post('/api/RecuperacionContrasena/enviarEmail', {
+          contactoRecuperacion: formData2.contactoRecuperacion,
+          ramdon: ramdon
+        });
+        if(response.data ) {
+          router.push('/Paginas/Recuperar');
+        } else if(response.data.error) {
+          setMensaje('Error al enviar el correo: ' + response.data.error);
+        } 
     } else {
-      console.log('Inicio de Sesión');
+      //Envio por axios los datos del formulario      
+      const response = await axios.post('/api/Usuario/inicioSesionUsuario', {
+        email: formData.email,
+        contrasena: formData.contraseña,
+      });
+      console.log('Respuesta:', response.data);
+
+      if (response.data.success) {
+        setMensaje('Inicio de sesión exitoso');
+        const rolNuevo = response.data.response.rol;
+        const idUsuario = response.data.response.id;
+        Cookies.set('rol', rolNuevo);
+        Cookies.set('idUsuario', idUsuario);
+        router.push('/Paginas/Turista');
+      } else {
+        setMensaje('Error al iniciar sesión: ' + response.data.error);
+      }
     }
   };
 
@@ -83,11 +110,10 @@ export default function Registro() {
 
   const inputsRecuperar = [
     { id: 'contactoRecuperacion', type: 'text', placeholder: 'Email o Número de Teléfono' },
-    { id: 'codigoRecuperacion', type: 'text', placeholder: 'Código de Recuperación' },
   ];
 
   return (
-    <div className="flex items-center justify-center w-96 h-96 bg-gray-100 dark:bg-gray-600">
+    <div className="flex items-center justify-center w-96 h-auto bg-gray-100 dark:bg-gray-600">
       <div className="fixed top-4 right-4">
         <ToggleDarkWhite />
       </div>

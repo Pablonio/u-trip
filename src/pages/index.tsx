@@ -21,7 +21,9 @@ export default function Home() {
 
   return (
     <main className={`w-full h-screen ${theme === 'dark' ? 'dark' : ''}`}>
-      <p>Redirecting...</p>
+      <p>
+        Redirecting...
+      </p>
     </main>
   );
 }
