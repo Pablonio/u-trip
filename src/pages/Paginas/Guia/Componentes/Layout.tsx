@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import Messaging from '../../Guia/Componentes/Messaging';
 import Feed from './Feed';
 
-const Layout = () => {
+export default function Layout() {
   return (
     <div className="flex flex-col h-screen">
       <Navbar />
@@ -16,5 +16,3 @@ const Layout = () => {
     </div>
   );
 };
-
-export default Layout;

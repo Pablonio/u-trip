@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = () => {
+export default function Sidebar() {
   return (
     <div className="bg-gray-100 text-gray-800 w-64 min-h-screen p-4 shadow">
       <div className="mb-4">Menu Item 1</div>
@@ -10,5 +10,3 @@ const Sidebar = () => {
     </div>
   );
 };
-
-export default Sidebar;

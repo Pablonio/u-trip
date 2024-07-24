@@ -24,7 +24,7 @@ interface Position {
     lng: number;
 }
 
-const MapaModal: React.FC<MapaModalProps> = ({ show, onClose, onLocationSelect }) => {
+export default function MapaModal({ show, onClose, onLocationSelect }: MapaModalProps) {
     const [map, setMap] = useState<any>(null);
     const [userMarker, setUserMarker] = useState<any>(null);
     const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
@@ -151,4 +151,3 @@ const MapaModal: React.FC<MapaModalProps> = ({ show, onClose, onLocationSelect }
     );
 };
 
-export default MapaModal;

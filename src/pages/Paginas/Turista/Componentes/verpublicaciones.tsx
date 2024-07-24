@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 
-const PaginaPublicacion=()=>{
+export default function PaginaPublicacion(){
     const [publicaciones, setPublicaciones] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -33,10 +33,10 @@ const PaginaPublicacion=()=>{
                     <p>Publicado por: {publicacion.usuario.nombre} {publicacion.usuariop.apellido}</p>
                     <h3>Comentarios:</h3>
                     <ul>
+                        
                     </ul>
                 </div>
              ))}
         </div>      
     );
 };
-export default PaginaPublicacion;
