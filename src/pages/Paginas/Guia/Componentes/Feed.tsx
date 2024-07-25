@@ -6,7 +6,7 @@ interface Post {
   content: string;
 }
 
-const Feed = () => {
+export default function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -15,13 +15,13 @@ const Feed = () => {
   const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const  handleNewPost= async () => {
+    const handleNewPost = async () => {
       try {
-        const idUsuario = Cookies.get('idUsuario');
-        const id= parseInt(idUsuario, 10) || 1;
-        const response = await axios.post( '/api/Publicacion/crearPublicacion', {
+        const idUsuario = Cookies.get('idUsuario') || '1'; // Default to '1' if undefined
+        const id = parseInt(idUsuario, 10);
+        const response = await axios.post('/api/Publicacion/crearPublicacion', {
           idUsuario: id,
-          tituloPost: newPostTitle
+          tituloPost: newPostTitle,
         });
 
         console.log('Respuesta:', response.data);
@@ -56,7 +56,7 @@ const Feed = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idUsuario: 1, tituloPost: newPostTitle }), // Ajusta idUsuario según sea necesario
+        body: JSON.stringify({ idUsuario: 1, tituloPost: newPostTitle }), // Adjust idUsuario as needed
       });
       const data = await res.json();
       if (data.success) {
@@ -73,8 +73,10 @@ const Feed = () => {
 
   return (
     <div className="flex-1 bg-gray-50 p-4 overflow-y-scroll h-screen">
-      <div className="bg-white p-4 mb-4 shadow rounded cursor-pointer flex items-center justify-center"
-           onClick={() => setIsModalOpen(true)}>
+      <div
+        className="bg-white p-4 mb-4 shadow rounded cursor-pointer flex items-center justify-center"
+        onClick={() => setIsModalOpen(true)}
+      >
         <span className="text-2xl">+</span>
         <span className="ml-2">Nueva Publicación</span>
       </div>
@@ -120,5 +122,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Messaging = () => {
+export default function Messaging() {
   return (
     <div className="bg-gray-100 text-gray-800 w-64 min-h-screen p-4 shadow">
       <div className="mb-4">Contact 1</div>
@@ -10,5 +10,3 @@ const Messaging = () => {
     </div>
   );
 };
-
-export default Messaging;

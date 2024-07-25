@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const reservas = await db.reserva.findMany({
       where: {
-        idUsuario: idUsuario,
+        id: idUsuario,
         idPublicacion: idPublicacion
       }
     });
