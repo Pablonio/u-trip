@@ -16,6 +16,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             apellido: true,
                         },
                     },
+                    imagenes:{
+                        id: true,
+                        url: true,
+                        tituloImg: true,
+                        usuario:{
+                           select:{
+                            id: true,
+                            nombre: true,
+                            apellido: true,
+                        },     
+                    },
+                },
                     comentarios:{
                         select:{
                             id: true,

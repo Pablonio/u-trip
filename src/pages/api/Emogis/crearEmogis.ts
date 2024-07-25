@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
         const { idPublicacion, emogiNombre } = req.body;
 
-
+        console.log('emogiNombre',emogiNombre);
         const emogis = await db.emogis.create({
             data: {
                 idPublicacion: idPublicacion,

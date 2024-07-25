@@ -3,7 +3,7 @@ import { AiTwotoneReconciliation, AiTwotoneSchedule } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
 import PerfilUsuario from './Componentes/panel';
-import PaginaPublicacion from './Componentes/verpublicaciones';
+import Publicacionesturista from './Componentes/verpublicaciones';
 
 export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
@@ -31,6 +31,7 @@ export default function Feed() {
     return (
         <div className='h-screen w-full bg-gray-100 relative flex overflow-hidden'>
             <NavBar navItems={turistaNavBar} handleNavbar={handleNavbar} />
+            <Publicacionesturista/>
             <div className='flex-1 p-4'>
                 {renderizadoComponente()}
             </div>

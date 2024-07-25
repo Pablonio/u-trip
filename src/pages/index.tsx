@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Cookie from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useTheme } from '../context/ThemeContext';
+import Cargando from '../pages/Paginas/Componentes/Cargando';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -21,9 +22,7 @@ export default function Home() {
 
   return (
     <main className={`w-full h-screen ${theme === 'dark' ? 'dark' : ''}`}>
-      <p>
-        Redirecting...
-      </p>
+      <Cargando />
     </main>
   );
 }
