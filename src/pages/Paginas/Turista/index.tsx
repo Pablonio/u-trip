@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { AiTwotoneReconciliation, AiTwotoneSchedule } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
-import PerfilUsuario from './Componentes/panel';
+import PerfilUsuario from '../Componentes/Perfil';
 import Publicacionesturista from './Componentes/verpublicaciones';
+
+
 
 export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
 
-    const handleNavbar = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        setComponenteSeleccionado(event.currentTarget.id);
+    const handleNavbar = (event: React.MouseEvent<HTMLSpanElement, MouseEvent> | null) => {
+        if (event) {
+            setComponenteSeleccionado(event.currentTarget.id);
+        }
     };
 
     const turistaNavBar = [
@@ -20,7 +24,7 @@ export default function Feed() {
     const renderizadoComponente = () => {
         switch (componenteSeleccionado) {
             case "Bienvenido":
-                return <PaginaInicial />;
+                return <Publicacionesturista />;
             case "Perfil":
                 return <PerfilUsuario />;
             default:
@@ -28,10 +32,13 @@ export default function Feed() {
         }
     };
 
+    
+
+
+
     return (
-        <div className='h-screen w-full bg-gray-100 relative flex overflow-hidden'>
+        <div className='h-screen w-full bg-gray-100 relative flex '>
             <NavBar navItems={turistaNavBar} handleNavbar={handleNavbar} />
-            <Publicacionesturista/>
             <div className='flex-1 p-4'>
                 {renderizadoComponente()}
             </div>

@@ -188,7 +188,7 @@ export default function Publicacion() {
         }
     };
     return (
-        <div className="max-w-2xl mx-auto mt-10">
+        <div className=" mx-auto mt-10">
             <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">Crear Publicación</h1>
             <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
                 <div className="p-6 space-y-6">

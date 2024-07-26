@@ -36,7 +36,14 @@ model Usuario {
   reaccionesComentario ReaccionesComentario[]
   comentarios          Comentario[]
   reservas Reserva[]
+  sexo Sexo @default(Masculino)
   flag Estado @default(Nuevo)
+}
+
+enum Sexo{
+  Masculino
+  Femenino
+  Binario
 }
 
 enum Estado {
