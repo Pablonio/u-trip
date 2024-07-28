@@ -3,7 +3,7 @@ import { AiTwotoneReconciliation, AiTwotoneSchedule } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
 import PerfilUsuario from '../Componentes/Perfil';
-import Publicacionesturista from './Componentes/verpublicaciones';
+import Publicaciones from './Componentes/PublicacionPages/Publicaciones';
 
 
 
@@ -24,7 +24,7 @@ export default function Feed() {
     const renderizadoComponente = () => {
         switch (componenteSeleccionado) {
             case "Bienvenido":
-                return <Publicacionesturista />;
+                return <Publicaciones />;
             case "Perfil":
                 return <PerfilUsuario />;
             default:
@@ -39,7 +39,7 @@ export default function Feed() {
     return (
         <div className='h-screen w-full bg-gray-100 relative flex '>
             <NavBar navItems={turistaNavBar} handleNavbar={handleNavbar} />
-            <div className='flex-1 p-4'>
+            <div className='flex-1 ml-64 p-4 min-h-screen'>
                 {renderizadoComponente()}
             </div>
         </div>

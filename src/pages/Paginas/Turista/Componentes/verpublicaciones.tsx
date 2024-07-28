@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-//datos recuperados para la publicacion
+import { format } from 'date-fns';
+import Emogis from '../../../../dictionaryEmogis/Emogis';
+
+type EmogisType = typeof Emogis;
+type EmogisKey = keyof EmogisType;
+
 type Publicacion = {
     id: number;
     tituloPost: string;
@@ -24,6 +29,16 @@ type Publicacion = {
             nombre: string;
             apellido: string;
         };
+        reacciones: {
+            id: number;
+            reaccion: string;
+            fechaPublicacion: string;
+            usuario: {
+                id: number;
+                nombre: string;
+                apellido: string;
+            };
+        }[];
     }[];
     reacciones: {
         id: number;
@@ -58,6 +73,15 @@ const Publicacionesturista: React.FC = () => {
         fetchData();
     }, []);
 
+    const formatDate = (dateString: string) => {
+        return format(new Date(dateString), 'yyyy-MM-dd');
+    };
+
+    const getEmoji = (reaccion: string) => {
+        const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey].significado === reaccion);
+        return emojiKey ? Emogis[emojiKey as unknown as EmogisKey].emo : reaccion;
+    };
+
     if (loading) {
         return <p>Cargando...</p>;
     }
@@ -67,16 +91,16 @@ const Publicacionesturista: React.FC = () => {
     }
 
     return (
-        <div className="overscroll-auto p-4 bg-gray-100 rounded-lg shadow-md max-w-7xl	">
+        <div className="p-4 bg-gray-100 rounded-lg shadow-md max-w-7xl">
             <h1 className="text-3xl font-bold mb-4">Publicaciones</h1>
             {publicaciones.map((publicacion) => (
                 <div key={publicacion.id} className="mb-6 p-4 bg-white rounded-lg shadow">
                     <h2 className="text-2xl font-semibold mb-2">{publicacion.tituloPost}</h2>
-                    <p className="text-gray-600 mb-1">Fecha de Publicación: {publicacion.fechaPublicacion}</p>
+                    <p className="text-gray-600 mb-1">Fecha de Publicación: {formatDate(publicacion.fechaPublicacion)}</p>
                     <p className="text-gray-600 mb-1">
                         Autor: {publicacion.usuario.nombre} {publicacion.usuario.apellido}
                     </p>
-                    
+
                     {/* Mostrar Imágenes */}
                     {publicacion.Imagen.length > 0 && (
                         <div className="mt-4">
@@ -99,7 +123,7 @@ const Publicacionesturista: React.FC = () => {
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Mostrar Comentarios */}
                     <div className="mt-4">
                         <h3 className="text-xl font-semibold mb-2">Comentarios:</h3>
@@ -107,10 +131,15 @@ const Publicacionesturista: React.FC = () => {
                             {publicacion.comentarios.map((comentario) => (
                                 <li key={comentario.id} className="mb-2">
                                     <p className="text-gray-800">{comentario.texto}</p>
-                                    <p className="text-gray-600">Fecha de Publicación: {comentario.fechaPublicacion}</p>
+                                    <p className="text-gray-600">Fecha de Publicación: {formatDate(comentario.fechaPublicacion)}</p>
                                     <p className="text-gray-600">
                                         Autor: {comentario.usuario.nombre} {comentario.usuario.apellido}
                                     </p>
+                                    <div className="flex space-x-2">
+                                        {comentario.reacciones.map((reaccion) => (
+                                            <span key={reaccion.id}>{getEmoji(reaccion.reaccion)}</span>
+                                        ))}
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -119,14 +148,10 @@ const Publicacionesturista: React.FC = () => {
                     {/* Mostrar Reacciones */}
                     <div className="mt-4">
                         <h3 className="text-xl font-semibold mb-2">Reacciones:</h3>
-                        <ul className="list-disc list-inside ml-4">
+                        <ul className="flex space-x-2">
                             {publicacion.reacciones.map((reaccion) => (
-                                <li key={reaccion.id} className="mb-2">
-                                    <p className="text-gray-800">{reaccion.reaccion}</p>
-                                    <p className="text-gray-600">Fecha de Publicación: {reaccion.fechaPublicacion}</p>
-                                    <p className="text-gray-600">
-                                        Autor: {reaccion.usuario.nombre} {reaccion.usuario.apellido}
-                                    </p>
+                                <li key={reaccion.id}>
+                                    <span>{getEmoji(reaccion.reaccion)}</span>
                                 </li>
                             ))}
                         </ul>
