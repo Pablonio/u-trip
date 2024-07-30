@@ -14,6 +14,17 @@ export default function PerfilUsuario(){
     const [sexo, setSexo] = useState('');
     const id = Cookie.get('idUsuario');
     const idUser = id ? parseInt(id, 10) : null;
+    //prueba de edicion de perfil
+    const[modoEdicion, setModoEdicion]=useState(false);
+    const[nuevoNombre, setNuevoNombre]=useState('');
+    const[nuevoApellido, setNuevoApellido]=useState('');
+    const[nuevoEmail, setNuevoEmail]=useState('');
+    const[nuevoTelefono, setNuevoTelefono]=useState('');
+    const[nuevaDireccion, setNuevaDireccion]=useState('');
+    const[nuevaFotoPerfil, setNuevaFotoPerfil]=useState('');
+    const[nuevoSexo, setNuevoSexo]=useState('');
+    const[nuevaFechaNacimiento, setNuevaFechaNacimiento]=useState<string | null>(null);
+    //constantes que almacenan los nuevos datos
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +42,10 @@ export default function PerfilUsuario(){
                 setFotoPerfil(response.data.response.fotoPerfil);
                 setSexo(response.data.response.sexo);
 
+                //Setear los nuevos valores añadidos
+                setNuevoNombre(response.data.response.nombre);
+                setNuevoApellido(response.data.response.apellido);
+                set
             } catch (error) {
                 console.error('Error fetching data:', error);
                 
