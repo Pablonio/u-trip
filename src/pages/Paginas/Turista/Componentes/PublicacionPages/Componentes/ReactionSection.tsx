@@ -16,6 +16,15 @@ export default function ReactionSection({
     groupedReactions = {}, // Valor predeterminado para evitar errores
     openReactionModal,
 }: ReactionSectionProps) {
+    if (!groupedReactions || Object.keys(groupedReactions).length === 0) {
+        return (
+            <div className="mt-4">
+                <h3 className="text-xl font-semibold mb-2">Reacciones:</h3>
+                <p>No hay reacciones disponibles.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="mt-4">
             <h3 className="text-xl font-semibold mb-2">Reacciones:</h3>
