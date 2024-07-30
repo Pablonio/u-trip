@@ -31,8 +31,10 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
     const [showCommentModal, setShowCommentModal] = useState(false);
 
     const getEmoji = (reaccion: string) => {
-        const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey].significado === reaccion);
-        return emojiKey ? Emogis[emojiKey as unknown as EmogisKey].emo : reaccion;
+        if (!Emogis) return reaccion;  // Verifica que Emogis esté definido
+
+        const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey]?.significado === reaccion);
+        return emojiKey ? Emogis[emojiKey as unknown as EmogisKey]?.emo : reaccion;
     };
 
     const handleEmojiClick = async (emogi: string) => {
@@ -101,7 +103,6 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
 
             if (response.data.success) {
                 console.log('Comentario registrado correctamente', response.data.response);
-                // Aquí deberías actualizar el estado de los comentarios
                 setNewComment('');
                 closeCommentModal();
             } else {
@@ -112,7 +113,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
         }
     };
 
-    const groupedReactions = publicacion.reacciones.reduce((acc, reaccion) => {
+    const groupedReactions = (publicacion.reacciones || []).reduce((acc, reaccion) => {
         const emoji = getEmoji(reaccion.reaccion);
         if (!acc[emoji]) {
             acc[emoji] = { count: 0, usuarios: [] };
@@ -188,6 +189,5 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
                 commentError={commentError}
             />
         </div>
-
     );
-};
+}

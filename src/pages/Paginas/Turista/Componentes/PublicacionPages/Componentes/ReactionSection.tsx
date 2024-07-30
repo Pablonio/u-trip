@@ -26,4 +26,4 @@ export default function ReactionSection({ groupedReactions, openReactionModal }:
             </ul>
         </div>
     );
-};
+}

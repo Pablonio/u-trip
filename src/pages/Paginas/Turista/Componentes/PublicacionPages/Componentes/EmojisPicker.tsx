@@ -20,8 +20,8 @@ export default function EmojiPicker({
     onEmojiMouseLeave
 }: EmojiPickerProps) {
     const getEmoji = (reaccion: string) => {
-        const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey].significado === reaccion);
-        return emojiKey ? Emogis[emojiKey as unknown as EmogisKey].emo : reaccion;
+        const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey]?.significado === reaccion);
+        return emojiKey ? Emogis[emojiKey as unknown as EmogisKey]?.emo : reaccion;
     };
 
     return (

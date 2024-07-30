@@ -19,4 +19,4 @@ export default function CardHeader({ tituloPost, fechaPublicacion, autor }: Card
             </p>
         </div>
     );
-};
+}

@@ -11,8 +11,8 @@ interface NavBarProps {
 }
 
 export default function NavBar({ handleNavbar, navItems, toggleSidebar }: NavBarProps) {
-
     const router = useRouter();
+
     const handleSalir = () => {
         Cookies.remove('rol');
         Cookies.remove('idUsuario');
@@ -50,6 +50,4 @@ export default function NavBar({ handleNavbar, navItems, toggleSidebar }: NavBar
             </div>
         </div>
     );
-};
-
-
+}
