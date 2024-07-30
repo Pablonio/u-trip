@@ -42,7 +42,7 @@ export default function Feed() {
     };
 
     return (
-        <div className='h-screen w-full bg-gray-100 dark:bg-gray-900 flex'>
+        <div className={`h-screen w-full bg-gray-100 dark:bg-gray-900 flex ${isSidebarOpen ? 'overflow-hidden' : ''}`}>
             {isSidebarOpen && (
                 <NavBar 
                     navItems={turistaNavBar} 
@@ -57,7 +57,7 @@ export default function Feed() {
                 <ToggleDarkWhite />
             </div>
 
-            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} p-4 `}>
+            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} p-4`}>
                 {renderizadoComponente()}
             </div>
 
@@ -75,4 +75,3 @@ export default function Feed() {
         </div>
     );
 }
-

@@ -15,15 +15,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const paquete = await db.paqueteTuristico.create({
         data: {
-          idPublicacion: idPublicacion,
+          idPublicacion,
           nombre: nombre,
           fechaInicio: fecha1,
           fechaFin: fecha2,
           precio: parseInt(precio),
           estadoPaquete: 'ACTIVO',
-          publicacion: {
-            connect: { id: idPublicacion }
-          }
         }
       });
 
