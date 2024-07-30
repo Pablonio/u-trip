@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { AiTwotoneReconciliation, AiTwotoneSchedule, AiOutlineTeam, AiOutlineUsergroupAdd, AiOutlineMenu } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
-import PaginaInicial from '../Turista/Componentes/PaginaInicial';
 import PerfilUsuario from '../Componentes/Perfil';
 import ListaUsuarios from './Usuarios/Usuarios';
 import Itinerario from './Itinerarios/Itinerarios'; 
 import Reserva from './Reservas/Reservas';
 import ToggleDarkWhite from '../Componentes/ToggleDarkWhite';
+import Saludo from './PanelPrincipal/Saludo';
 
 export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
@@ -46,7 +46,7 @@ export default function Feed() {
             case "Perfil":
                 return <PerfilUsuario />;
             default:
-                return <PaginaInicial />;
+                return < Saludo/>;
         }
     };
 

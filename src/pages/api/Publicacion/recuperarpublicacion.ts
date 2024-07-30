@@ -26,6 +26,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             emogiComentario: true,
                         },
                     },
+                    paquetesPaqueteTuristico: {
+                        include: {
+                            publicacion: true,
+                        },
+                    },
+                    lugaresTuristicos: true,
+                    compartirPublicacion: true,
                 },
             });
 

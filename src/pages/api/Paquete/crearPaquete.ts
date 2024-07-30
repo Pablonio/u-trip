@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '../../../lib/lib';
+import { db } from '../../../lib/lib'; // Asegúrate de que esta ruta sea correcta
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const fecha1 = new Date(fechaInicio);
     const fecha2 = new Date(fechaFin);
-    
+
     try {
       const paquete = await db.paqueteTuristico.create({
         data: {
@@ -19,7 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           nombre: nombre,
           fechaInicio: fecha1,
           fechaFin: fecha2,
-          precio: precio,
+          precio: parseInt(precio),
+          estadoPaquete: 'ACTIVO',
           publicacion: {
             connect: { id: idPublicacion }
           }

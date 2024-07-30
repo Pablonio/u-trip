@@ -67,7 +67,8 @@ export default function ListaUsuarios () {
   }
 
   return (
-    <div className="max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg">
+    <div className="max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg bg-white dark:bg-gray-800">
+      <div className='w-full max-w-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
       <h1 className="text-center text-2xl font-bold mb-4">Usuarios</h1>
       <input
         type="text"
@@ -77,24 +78,24 @@ export default function ListaUsuarios () {
         className="mb-4 p-2 border border-gray-300 rounded w-full max-w-lg"
       />
       {usuarios.length === 0 ? (
-        <span className="block p-4 bg-yellow-100 text-yellow-900 rounded">No hay usuarios en la base de datos</span>
+        <span className="block text-sm font-medium text-gray-900 dark:text-gray-100">No hay usuarios en la base de datos</span>
       ) : (
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-gray-200 bg-white dark:bg-gray-800 ">
+          <thead className="bg-gray-50 bg-white dark:bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefono</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Direccion</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 dark:text-gray-100 uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Nombre</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Apellido</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Rol</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Telefono</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Direccion</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-gray-200 ">
             {usuarios.map((usuario: Usuario) => (
-              <tr key={usuario.id} className="bg-white">
+              <tr key={usuario.id} className="bg-white dark:bg-gray-800">
                 <td className="px-6 py-4 whitespace-nowrap">{usuario.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{usuario.nombre}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{usuario.apellido}</td>
@@ -139,6 +140,7 @@ export default function ListaUsuarios () {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 };
