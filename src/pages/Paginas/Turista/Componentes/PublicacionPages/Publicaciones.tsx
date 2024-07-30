@@ -35,6 +35,17 @@ export type Publicacion = {
                 apellido: string;
             };
         }[];
+        comentariosDeComentario: {
+            id: number;
+            idComentario: number;
+            fechaPublicacion: string;
+            comentario: {
+                id: number;
+                texto: string;
+            };
+            respuesta: string;
+            flag: string;
+        }[];
     }[];
     reacciones: {
         id: number;
@@ -60,6 +71,7 @@ export type Publicacion = {
     reaccionConteo?: { [key: string]: number };
 };
 
+
 export default function Publicacionesturista() {
     const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
     const [selectedPublicacion, setSelectedPublicacion] = useState<Publicacion | null>(null);
@@ -69,6 +81,7 @@ export default function Publicacionesturista() {
     const fetchPublicaciones = async () => {
         try {
             const response = await axios.get('/api/Publicacion/recuperarpublicacion');
+            console.log('Respuesta:', response.data);
             const publicacionesData: Publicacion[] = response.data.response;
 
             const publicacionesConConteo = publicacionesData.map((publicacion) => {
