@@ -45,7 +45,9 @@ export default function PerfilUsuario(){
                 //Setear los nuevos valores añadidos
                 setNuevoNombre(response.data.response.nombre);
                 setNuevoApellido(response.data.response.apellido);
-                set
+                setNuevoEmail(response.data.response.email);
+                setNuevoTelefono(response.data.response.telefono);
+                setNuevaDireccion(response.data.response.direccion);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 
