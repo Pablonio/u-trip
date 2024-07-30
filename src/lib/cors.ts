@@ -8,7 +8,7 @@ export async function cors(
 ) {
   await NextCors(req, res, {
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    origin: ['https://www.u-trip.online', 'https://u-trip-pablonios-projects.vercel.app'],
+    origin: ['https://www.u-trip.online','https://u-trip-git-models-pablonios-projects.vercel.app/','https://u-trip-pablonios-projects.vercel.app'],
     optionsSuccessStatus: 200,
   });
 
