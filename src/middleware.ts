@@ -1,6 +1,12 @@
-import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { parse } from 'cookie';
+
+const allowedOrigins = ['https://example.com', 'https://another-domain.com']; // Replace with your allowed origins
+
+const corsOptions = {
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
 
 export async function middleware(request: NextRequest) {
   const cookieHeader = request.headers.get('cookie');
@@ -17,23 +23,28 @@ export async function middleware(request: NextRequest) {
 
   const userRoles: (keyof typeof protectedRoutes)[] = ['INCOGNITO', 'TURISTA', 'GUIA', 'ADMINISTRADOR', 'BANEADO'];
 
-  const response = NextResponse.next();
+  const origin = request.headers.get('origin') ?? '';
+  const isAllowedOrigin = allowedOrigins.includes(origin);
 
-  // Configura los encabezados de CORS
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  const isPreflight = request.method === 'OPTIONS';
 
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, {
-      status: 204,
-      headers: response.headers,
-    });
+  if (isPreflight) {
+    const preflightHeaders = {
+      ...(isAllowedOrigin && { 'Access-Control-Allow-Origin': origin }),
+      ...corsOptions,
+    };
+    return NextResponse.json({}, { headers: preflightHeaders });
   }
 
   if (!role || role === 'INCOGNITO') {
     if (protectedRoutes.INCOGNITO.some(route => request.nextUrl.pathname.startsWith(route))) {
+      const response = NextResponse.next();
+      if (isAllowedOrigin) {
+        response.headers.set('Access-Control-Allow-Origin', origin);
+      }
+      Object.entries(corsOptions).forEach(([key, value]) => {
+        response.headers.set(key, value);
+      });
       return response;
     } else {
       return NextResponse.redirect(new URL('/Error404', request.url));
@@ -44,6 +55,13 @@ export async function middleware(request: NextRequest) {
     const userRoutes = protectedRoutes[role as keyof typeof protectedRoutes];
 
     if (userRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
+      const response = NextResponse.next();
+      if (isAllowedOrigin) {
+        response.headers.set('Access-Control-Allow-Origin', origin);
+      }
+      Object.entries(corsOptions).forEach(([key, value]) => {
+        response.headers.set(key, value);
+      });
       return response;
     } else {
       return NextResponse.redirect(new URL(userRoutes[0], request.url));
