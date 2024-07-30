@@ -27,7 +27,7 @@ export default function Feed() {
     };
 
     const turistaNavBar = [
-        { id: "Bienvenido", icon: <AiTwotoneReconciliation className='size-8' />, label: "Itinerarios" }
+        { id: "Bienvenido", icon: <AiTwotoneReconciliation className='size-8' />, label: "Publicaciones" }
     ];
 
     const renderizadoComponente = () => {
