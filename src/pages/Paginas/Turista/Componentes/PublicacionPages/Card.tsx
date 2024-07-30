@@ -30,6 +30,21 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
     const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
     const [showCommentModal, setShowCommentModal] = useState(false);
 
+    // Verifica si la publicacion está definida
+    if (!publicacion) {
+        return <div>Loading...</div>; // O maneja la ausencia de datos de otra manera
+    }
+
+    const {
+        tituloPost,
+        fechaPublicacion,
+        usuario,
+        Imagen = [],
+        emogisParaReaccionarPublicacion = [],
+        comentarios = [],
+        reacciones = []
+    } = publicacion;
+
     // Manejar la obtención de emojis
     const getEmoji = (reaccion: string) => {
         if (!Emogis) return reaccion; // Verifica que Emogis esté definido
@@ -115,8 +130,8 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
         }
     };
 
-    // Asegúrate de que publicacion y publicacion.reacciones estén definidos y es un array
-    const groupedReactions = (publicacion && publicacion.reacciones ? publicacion.reacciones : []).reduce((acc, reaccion) => {
+    // Asegúrate de que reacciones es un array
+    const groupedReactions = reacciones.reduce((acc, reaccion) => {
         if (!reaccion || !reaccion.reaccion) return acc; // Verifica si reaccion es válida
         const emoji = getEmoji(reaccion.reaccion);
         if (!acc[emoji]) {
@@ -148,12 +163,12 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
     return (
         <div className="mb-6 p-4 bg-white rounded-lg shadow overflow-auto">
             <CardHeader
-                tituloPost={publicacion.tituloPost}
-                fechaPublicacion={publicacion.fechaPublicacion}
-                autor={publicacion.usuario}
+                tituloPost={tituloPost}
+                fechaPublicacion={fechaPublicacion}
+                autor={usuario}
             />
 
-            <ImageGallery images={publicacion.Imagen || []} onClick={onClick} />
+            <ImageGallery images={Imagen} onClick={onClick} />
 
             <ReactionSection
                 groupedReactions={groupedReactions}
@@ -167,7 +182,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
 
             {showEmojis && (
                 <EmojiPicker
-                    emojis={publicacion.emogisParaReaccionarPublicacion || []}
+                    emojis={emogisParaReaccionarPublicacion}
                     onEmojiClick={handleEmojiClick}
                     hoveredEmoji={hoveredEmoji}
                     onEmojiMouseEnter={handleEmojiMouseEnter}
@@ -175,7 +190,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
                 />
             )}
 
-            {isDetailedView && <CommentSection comments={publicacion.comentarios || []} />}
+            {isDetailedView && <CommentSection comments={comentarios} />}
 
             <ReactionModal
                 show={showReactionModal}
