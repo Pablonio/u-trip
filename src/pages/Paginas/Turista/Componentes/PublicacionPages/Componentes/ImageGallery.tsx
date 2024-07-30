@@ -8,11 +8,11 @@ type ImageType = {
 };
 
 type ImageGalleryProps = {
-    images: ImageType[];
+    images?: ImageType[];  // Hacer images opcional
     onClick: () => void;
 };
 
-export default function ImageGallery({ images, onClick }: ImageGalleryProps) {
+export default function ImageGallery({ images = [], onClick }: ImageGalleryProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {

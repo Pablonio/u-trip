@@ -113,13 +113,15 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
         }
     };
 
+    // Asegúrate de que publicacion.reacciones esté definido y es un array
     const groupedReactions = (publicacion.reacciones || []).reduce((acc, reaccion) => {
+        if (!reaccion || !reaccion.reaccion) return acc; // Verifica si reaccion es válida
         const emoji = getEmoji(reaccion.reaccion);
         if (!acc[emoji]) {
             acc[emoji] = { count: 0, usuarios: [] };
         }
         acc[emoji].count++;
-        acc[emoji].usuarios.push(`${reaccion.usuario.nombre} ${reaccion.usuario.apellido}`);
+        acc[emoji].usuarios.push(`${reaccion.usuario?.nombre || 'Desconocido'} ${reaccion.usuario?.apellido || 'Desconocido'}`);
         return acc;
     }, {} as Record<string, { count: number, usuarios: string[] }>);
 
@@ -163,7 +165,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
 
             {showEmojis && (
                 <EmojiPicker
-                    emojis={publicacion.emogisParaReaccionarPublicacion}
+                    emojis={publicacion.emogisParaReaccionarPublicacion || []}
                     onEmojiClick={handleEmojiClick}
                     hoveredEmoji={hoveredEmoji}
                     onEmojiMouseEnter={handleEmojiMouseEnter}
@@ -171,7 +173,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
                 />
             )}
 
-            {isDetailedView && <CommentSection comments={publicacion.comentarios} />}
+            {isDetailedView && <CommentSection comments={publicacion.comentarios || []} />}
 
             <ReactionModal
                 show={showReactionModal}

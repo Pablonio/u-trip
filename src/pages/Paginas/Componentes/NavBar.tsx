@@ -6,11 +6,11 @@ import Cookies from 'js-cookie';
 
 interface NavBarProps {
     handleNavbar: (event: React.MouseEvent<HTMLSpanElement, MouseEvent> | null) => void;
-    navItems: Array<{ id: string; icon: JSX.Element; label: string }>;
+    navItems?: Array<{ id: string; icon: JSX.Element; label: string }>; // Hacer opcional
     toggleSidebar: () => void;
 }
 
-export default function NavBar({ handleNavbar, navItems, toggleSidebar }: NavBarProps) {
+export default function NavBar({ handleNavbar, navItems = [], toggleSidebar }: NavBarProps) { // Valor predeterminado aquí
     const router = useRouter();
 
     const handleSalir = () => {

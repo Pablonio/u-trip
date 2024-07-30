@@ -5,10 +5,13 @@ type ReactionModalProps = {
     show: boolean;
     onClose: () => void;
     selectedEmoji: string | null;
-    users: string[];
+    users?: string[]; // Hacer users opcional
 };
 
 export default function ReactionModal({ show, onClose, selectedEmoji, users }: ReactionModalProps) {
+
+    const validUsers = Array.isArray(users) ? users : [];
+
     return (
         <CustomModal
             show={show}
@@ -17,9 +20,9 @@ export default function ReactionModal({ show, onClose, selectedEmoji, users }: R
             content={
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Usuarios que reaccionaron con {selectedEmoji}</h3>
-                    {users.length > 0 ? (
+                    {validUsers.length > 0 ? (
                         <ul>
-                            {users.map((usuario, index) => (
+                            {validUsers.map((usuario, index) => (
                                 <li key={index} className="text-gray-600">{usuario}</li>
                             ))}
                         </ul>

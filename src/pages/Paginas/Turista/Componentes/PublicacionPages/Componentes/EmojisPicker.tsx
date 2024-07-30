@@ -5,7 +5,7 @@ type EmogisType = typeof Emogis;
 type EmogisKey = keyof EmogisType;
 
 type EmojiPickerProps = {
-    emojis: { id: number; emogi: string }[];
+    emojis?: { id: number; emogi: string }[];  // Hacer emojis opcional
     onEmojiClick: (emoji: string) => void;
     hoveredEmoji: string | null;
     onEmojiMouseEnter: (emoji: string) => void;
@@ -13,7 +13,7 @@ type EmojiPickerProps = {
 };
 
 export default function EmojiPicker({
-    emojis,
+    emojis = [],  // Valor predeterminado como array vacío
     onEmojiClick,
     hoveredEmoji,
     onEmojiMouseEnter,
