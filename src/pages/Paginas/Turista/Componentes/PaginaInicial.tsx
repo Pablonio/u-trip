@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Publicacion from './Publicacion/Publicacion';
+import Publicacion from './PublicacionPages/Publicaciones';
 import Modal from './Modal';
 
 export default function PaginaInicial() {

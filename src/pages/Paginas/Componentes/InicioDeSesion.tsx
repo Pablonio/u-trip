@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import ramdonAuthMessages from '../../../ramdonAuthMessages/ramdon';
+import toast, { Toaster } from 'react-hot-toast';
 
 type FormData = {
   nombre: string;
@@ -20,7 +21,6 @@ type FormData2 = {
 export default function Registro() {
   const [esRegistro, setRegistro] = useState(false);
   const [recuperar, setRecuperar] = useState(false);
-  const [mensaje, setMensaje] = useState('');
 
   const router = useRouter();
 
@@ -50,55 +50,86 @@ export default function Registro() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     if (esRegistro) {
-      //Envio por axios los datos del formulario
-      const response = await axios.post('/api/Usuario/registrarUsuario', {
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        email: formData.email,
-        contrasena: formData.contraseña,
-        confirmarContrasena: formData.contraseña,
-      });
-      console.log('Respuesta:', response.data);
+        try {
+            // Envío por axios los datos del formulario
+            const response = await axios.post('/api/Usuario/registrarUsuario', {
+                nombre: formData.nombre,
+                apellido: formData.apellido,
+                email: formData.email,
+                contrasena: formData.contraseña,
+                confirmarContrasena: formData.contraseña,
+            });
 
-      if (response.data.success) {
-        setMensaje('Registro exitoso');
-      } else {
-        setMensaje('Error al registrar: ' + response.data.error);
-      }
-      
+            console.log('Respuesta:', response.data);
 
+            if (response.data.success) {
+                toast.success('Registro exitoso');
+            } else {
+                toast.error('Error al registrar: ' + response.data.error);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error('Error de Axios: ' + error.message);
+                console.error('Axios error:', error.response?.data || error.message);
+            } else {
+                toast.error('Error desconocido: ');
+                console.error('Unknown error:', error);
+            }
+        }
     } else if (recuperar && rol === 'INCOGNITO') {
-        const ramdon = ramdonAuthMessages();
-        const response = await axios.post('/api/RecuperacionContrasena/enviarEmail', {
-          contactoRecuperacion: formData2.contactoRecuperacion,
-          ramdon: ramdon
-        });
-        if(response.data ) {
-          router.push('/Paginas/Recuperar');
-        } else if(response.data.error) {
-          setMensaje('Error al enviar el correo: ' + response.data.error);
-        } 
-    } else {
-      //Envio por axios los datos del formulario      
-      const response = await axios.post('/api/Usuario/inicioSesionUsuario', {
-        email: formData.email,
-        contrasena: formData.contraseña,
-      });
-      console.log('Respuesta:', response.data);
+        try {
+            const ramdon = ramdonAuthMessages();
+            const response = await axios.post('/api/RecuperacionContrasena/enviarEmail', {
+                contactoRecuperacion: formData2.contactoRecuperacion,
+                ramdon: ramdon
+            });
 
-      if (response.data.success) {
-        setMensaje('Inicio de sesión exitoso');
-        const rolNuevo = response.data.response.rol;
-        const idUsuario = response.data.response.id;
-        Cookies.set('rol', rolNuevo);
-        Cookies.set('idUsuario', idUsuario);
-        router.push('/Paginas/Turista');
-      } else {
-        setMensaje('Error al iniciar sesión: ' + response.data.error);
-      }
+            if (response.data) {
+                router.push('/Paginas/Recuperar');
+            } else if (response.data.error) {
+                toast.error('Error al enviar el correo: ' + response.data.error);
+            } 
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error('Error de Axios: ' + error.message);
+                console.error('Axios error:', error.response?.data || error.message);
+            } else {
+                toast.error('Error desconocido: ');
+                console.error('Unknown error:', error);
+            }
+        }
+    } else {
+        try {
+            // Envío por axios los datos del formulario      
+            const response = await axios.post('/api/Usuario/inicioSesionUsuario', {
+                email: formData.email,
+                contrasena: formData.contraseña,
+            });
+
+            if (response.data.success) {
+                toast.success('Inicio de sesión exitoso');
+                const rolNuevo = response.data.response.rol;
+                const idUsuario = response.data.response.id;
+                Cookies.set('rol', rolNuevo);
+                Cookies.set('idUsuario', idUsuario);
+                router.push('/Paginas/Turista');
+            } else {
+                toast.error('Error al iniciar sesión: ' + response.data.error);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error('Error de Axios: ' + error.message);
+                console.error('Axios error:', error.response?.data || error.message);
+            } else {
+                toast.error('Error desconocido: ' );
+                console.error('Unknown error:', error);
+            }
+        }
     }
   };
+
 
   const inputsRegistro = [
     { id: 'nombre', type: 'text', placeholder: 'Nombre' },
@@ -188,7 +219,7 @@ export default function Registro() {
               ))}
             </>
           )}
-          {mensaje && <p className="text-red-500">{mensaje}</p>}
+          
           <div className="mt-6">
             <button
               className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -213,6 +244,7 @@ export default function Registro() {
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

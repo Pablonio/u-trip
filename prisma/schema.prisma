@@ -36,7 +36,15 @@ model Usuario {
   reaccionesComentario ReaccionesComentario[]
   comentarios          Comentario[]
   reservas Reserva[]
+  compartirPublicacion CompartirPublicacion[]
+  sexo Sexo @default(Masculino)
   flag Estado @default(Nuevo)
+}
+
+enum Sexo{
+  Masculino
+  Femenino
+  Binario
 }
 
 enum Estado {
@@ -79,6 +87,7 @@ model Publicacion{
   comentarios Comentario[]
   paquetesPaqueteTuristico PaqueteTuristico[]
   lugaresTuristicos LugarTuristico[]
+  compartirPublicacion CompartirPublicacion[]
   flag Estado @default(Nuevo)
 }
 
@@ -198,7 +207,14 @@ model PaqueteTuristico{
   fechaFin DateTime
   idPublicacion Int
   publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  precio Int @default(0)
+  estadoPaquete EstadoPaquete @default(ACTIVO)
   flag Estado @default(Nuevo)
+}
+
+enum EstadoPaquete {
+  CANCELADO
+  ACTIVO
 }
 
 model Reserva{
@@ -207,18 +223,24 @@ model Reserva{
   idPaquete Int
   paquete PaqueteTuristico @relation(fields: [idPaquete], references: [id])
   usuario Usuario @relation(fields: [idUsuario], references: [id])
-  estado EstadoReserva @default(DISPONIBLE)
+  estado EstadoReserva @default(ACEPTADA)
   itinerarios Itinerarios[]
+  deuda Int @default(0)
+  estadoDeuda EstadoDeuda @default(PENDIENTE)
+  saldado Boolean @default(false)
   fechaReserva DateTime @default(now())
   flag Estado @default(Nuevo)
 }
 
-enum EstadoReserva {
-  DISPONIBLE
+enum EstadoDeuda {
+  PAGADO
   PENDIENTE
-  RESERVADA
+}
+
+enum EstadoReserva {
+  ACEPTADA
+  PENDIENTE
   CANCELADA
-  POSTERGADA
 }
 
 model Itinerarios{
@@ -229,6 +251,15 @@ model Itinerarios{
   descripcion String
   fechaInicio DateTime
   fechaFin DateTime
+  flag Estado @default(Nuevo)
+}
+
+model CompartirPublicacion{
+  id Int @id @default(autoincrement())
+  idPublicacion Int
+  publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [id])
   flag Estado @default(Nuevo)
 }
 

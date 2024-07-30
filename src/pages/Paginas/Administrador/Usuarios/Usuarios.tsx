@@ -14,12 +14,13 @@ type Usuario = {
 export default function ListaUsuarios () {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [editandoUsuarioId, setEditandoUsuarioId] = useState<number | null>(null);
-  const [nuevoRolUsuario, setNuevoRolUsuario] = useState<string>(''); // Nuevo estado para guardar el rol temporalmente
+  const [nuevoRolUsuario, setNuevoRolUsuario] = useState<string>('');
+  const [busqueda, setBusqueda] = useState<string>('');
 
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await axios.get('/api/Usuario/recuperarusuarios');
+        const response = await axios.get('/api/Usuario/recuperarusuarios',{params: {search: busqueda || ''}});
         if (response.data.success) {
           setUsuarios(response.data.response);
         } else {
@@ -30,11 +31,11 @@ export default function ListaUsuarios () {
       }
     };
     fetchUsuarios();
-  }, []);
+  }, [busqueda]);
 
   const handleEditarRol = (id: number, rolActual: string) => {
     setEditandoUsuarioId(id);
-    setNuevoRolUsuario(rolActual); // Guardar el rol actual del usuario
+    setNuevoRolUsuario(rolActual);
   };
 
   const handleGuardarRol = async (id: number) => {
@@ -44,12 +45,11 @@ export default function ListaUsuarios () {
         rol: nuevoRolUsuario
       });
       if (response.data.success) {
-        // Actualizar la lista de usuarios después de la modificación
         const updatedUsuarios = usuarios.map(usuario =>
           usuario.id === id ? { ...usuario, rol: nuevoRolUsuario } : usuario
         );
         setUsuarios(updatedUsuarios);
-        setEditandoUsuarioId(null); // Terminar la edición
+        setEditandoUsuarioId(null);
       } else {
         console.error('Fallo al editar el rol:', response.data.error);
       }
@@ -62,9 +62,20 @@ export default function ListaUsuarios () {
     setNuevoRolUsuario(e.target.value);
   };
 
+  const handleChangeBusqueda = (e: React.ChangeEvent<HTMLInputElement>)=>{
+    setBusqueda(e.target.value);
+  }
+
   return (
-    <div className="">
+    <div className="max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg">
       <h1 className="text-center text-2xl font-bold mb-4">Usuarios</h1>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, apellido o email"
+        value={busqueda}
+        onChange={handleChangeBusqueda}
+        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-lg"
+      />
       {usuarios.length === 0 ? (
         <span className="block p-4 bg-yellow-100 text-yellow-900 rounded">No hay usuarios en la base de datos</span>
       ) : (
