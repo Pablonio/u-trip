@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '../../../lib/lib'
+import { db } from '../../../lib/lib';
+import { allowCors } from '../../../utils/allowCors';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { nombre, apellido, email, contrasena, confirmarContrasena } = req.body;
 
@@ -16,11 +17,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const usuario = await db.usuario.create({
         data: {
-          nombre: nombre,
-          apellido: apellido,
-          email: email,
-          contrasena: contrasena,
-          confirmarContrasena: contrasena
+          nombre,
+          apellido,
+          email,
+          contrasena,
+          confirmarContrasena,
         }
       });
 
@@ -33,3 +34,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Método no permitido' });
   }
 }
+
+export default allowCors(handler);
