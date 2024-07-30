@@ -55,7 +55,8 @@ export default function Reserva() {
   };
 
   return (
-    <div className="max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg">
+    <div className="max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg bg-white dark:bg-gray-800">
+      <div className='w-full max-w-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
       <h1 className="text-center text-2xl font-bold mb-4">Reservas</h1>
       <input
         type="text"
@@ -116,6 +117,7 @@ export default function Reserva() {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 }

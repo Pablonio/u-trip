@@ -52,8 +52,6 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
     };
 
     const handleEmojiClick = async (emogi: string) => {
-        console.log('Significado del emoji:', emogi);
-
         const reaccion = emogi;
         const idPublicacion = publicacion.id;
         const idUsuario = parseInt(Cookies.get('idUsuario') || '0');
@@ -171,20 +169,23 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
                 openReactionModal={openReactionModal}
             />
 
-            <ActionButtons
-                onReactionClick={() => setShowEmojis(!showEmojis)}
-                onCommentClick={openCommentModal}
-            />
-
-            {showEmojis && (
-                <EmojiPicker
-                    emojis={emogisParaReaccionarPublicacion}
-                    onEmojiClick={handleEmojiClick}
-                    hoveredEmoji={hoveredEmoji}
-                    onEmojiMouseEnter={handleEmojiMouseEnter}
-                    onEmojiMouseLeave={handleEmojiMouseLeave}
+            <div className="relative">
+                <ActionButtons
+                    onReactionClick={() => setShowEmojis(!showEmojis)}
+                    onCommentClick={openCommentModal}
                 />
-            )}
+                {showEmojis && (
+                    <div className="absolute bottom-12 left-0">
+                        <EmojiPicker
+                            emojis={emogisParaReaccionarPublicacion}
+                            onEmojiClick={handleEmojiClick}
+                            hoveredEmoji={hoveredEmoji}
+                            onEmojiMouseEnter={handleEmojiMouseEnter}
+                            onEmojiMouseLeave={handleEmojiMouseLeave}
+                        />
+                    </div>
+                )}
+            </div>
 
             {isDetailedView && <CommentSection comments={comentarios} />}
 

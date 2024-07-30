@@ -47,13 +47,6 @@ export type Publicacion = {
             flag: string;
         }[];
     }[];
-    paquetesPaqueteTuristico: {
-        id: number;
-        nombre: string;
-        fechaInicio: string;
-        fechaFin: string;
-        precio: number;
-    }[];
     reacciones: {
         id: number;
         reaccion: string;
@@ -87,7 +80,7 @@ export default function Publicacionesturista() {
     const fetchPublicaciones = async () => {
         try {
             const response = await axios.get('/api/Publicacion/recuperarpublicacion');
-            console.log('Respuesta:', response.data.response);
+            console.log('Respuesta:', response.data);
             const publicacionesData: Publicacion[] = response.data.response;
 
             const publicacionesConConteo = publicacionesData.map((publicacion) => {
@@ -130,21 +123,21 @@ export default function Publicacionesturista() {
     };
 
     if (loading) {
-        return <p className="text-gray-700 dark:text-gray-300">Cargando...</p>;
+        return <p>Cargando...</p>;
     }
 
     if (error) {
-        return <p className="text-red-500 dark:text-red-400">{error}</p>;
+        return <p>{error}</p>;
     }
 
     return (
-        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md max-w-7xl">
-            <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Publicaciones</h1>
+        <div className="min-h-screen p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold mb-4 dark:text-white">Publicaciones</h1>
             {selectedPublicacion ? (
                 <div className="flex flex-col items-center">
                     <button 
                         onClick={handleBackClick} 
-                        className="mb-4 px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                     >
                         Volver a las publicaciones
                     </button>
@@ -159,7 +152,7 @@ export default function Publicacionesturista() {
             ) : (
                 <div className="flex flex-col space-y-4">
                     {publicaciones.map((publicacion) => (
-                        <div key={publicacion.id} className="w-full max-w-4xl">
+                        <div key={publicacion.id} className="w-full max-w-4xl mx-auto">
                             <Card 
                                 publicacion={publicacion} 
                                 onClick={() => handleCardClick(publicacion)} 
@@ -170,4 +163,4 @@ export default function Publicacionesturista() {
             )}
         </div>
     );
-}
+};

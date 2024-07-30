@@ -3,7 +3,7 @@ import Emogis from '../../../../../dictionaryEmogis/Emogis';
 import axios from 'axios';
 import Modal from '../Modal';
 import MapaModal from '../MapaModalUbicacion';
-import { FaMapMarkerAlt, FaSmile, FaImage, FaTimes } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaSmile } from 'react-icons/fa';
 import { IoMdAdd } from 'react-icons/io';
 import Cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
@@ -23,6 +23,7 @@ type PaqueteType = {
     nombre: string;
     fechaInicio: string;
     fechaFin: string;
+    precio: number;
 };
 
 export default function Publicacion() {
@@ -56,7 +57,8 @@ export default function Publicacion() {
     const [packageData, setPackageData] = useState<PaqueteType>({
         nombre: '',
         fechaInicio: '',
-        fechaFin: ''
+        fechaFin: '',
+        precio: 0
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -223,7 +225,7 @@ export default function Publicacion() {
     return (
         <div className="max-w-2xl mx-auto mt-10">
             <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">Crear Publicación</h1>
-            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <label htmlFor="tituloPost" className="block text-gray-700 dark:text-gray-200">Título:</label>
                     <input
@@ -231,115 +233,103 @@ export default function Publicacion() {
                         type="text"
                         value={formData.tituloPost}
                         onChange={handleChange}
-                        className="w-full p-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        placeholder="¿Qué estás pensando?"
+                        className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
                     />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div>
                     <button
                         type="button"
-                        onClick={() => setMapModalOpen(true)}
-                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        onClick={() => setShowEmojiPicker(prev => !prev)}
+                        className="inline-flex items-center space-x-2 border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                     >
-                        <FaMapMarkerAlt className="text-xl" />
-                        <span>Ubicación</span>
+                        <FaSmile />
+                        <span>Agregar Emogi</span>
                     </button>
-                    <div className="flex space-x-4">
-                        <button 
-                            type="button" 
-                            className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        >
-                            <FaSmile className="text-2xl" />
-                        </button>
-                        <label className="cursor-pointer text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">
-                            <FaImage className="text-2xl" />
-                            <input type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" />
-                        </label>
-                    </div>
+                    {showEmojiPicker && (
+                        <div className="flex flex-wrap gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg max-h-60 overflow-y-auto">
+                            {Object.entries(Emogis).map(([id, { emo }]) => (
+                                <button
+                                    key={id}
+                                    type="button"
+                                    onClick={() => handleEmojiClick(id)}
+                                    className="p-2 border border-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                                >
+                                    <span className="text-xl">{emo}</span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                {showEmojiPicker && (
-                    <div className="flex flex-wrap gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg max-h-60 overflow-y-auto">
-                        {Object.entries(Emogis).map(([id, { emo }]) => (
-                            <button
-                                key={id}
-                                type="button"
-                                onClick={() => handleEmojiClick(id)}
-                                className="text-2xl hover:bg-gray-200 dark:hover:bg-gray-600 p-1 rounded"
-                            >
-                                {emo}
-                            </button>
-                        ))}
-                    </div>
-                )}
-
-                {formData.emogisParaReaccionar.length > 0 && (
-                    <div className="flex flex-wrap gap-3">
-                        {formData.emogisParaReaccionar.map(id => {
-                            const emogi = Emogis[id as unknown as keyof typeof Emogis] as EmogiType;
-                            return (
-                                <div key={id} className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1">
-                                    <span className="text-2xl mr-2">{emogi?.emo}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveEmogi(id)}
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        <FaTimes />
-                                    </button>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-
-                {formData.imagenes.length > 0 && (
-                    <div className="grid grid-cols-2 gap-4">
-                        {formData.imagenes.map((imagen, index) => (
+                <div>
+                    <label className="block text-gray-700 dark:text-gray-200">Imagenes:</label>
+                    <input
+                        type="file"
+                        multiple
+                        onChange={handleImageChange}
+                        className="block w-full text-gray-700 dark:text-gray-200"
+                    />
+                    <div className="mt-2 flex flex-wrap gap-4">
+                        {formData.imagenes.map((img, index) => (
                             <div key={index} className="relative">
-                                <img src={imagen.url} alt={`Imagen ${index}`} className="w-full h-48 object-cover rounded-lg" />
+                                <img src={img.url} alt={img.tituloImg} className="w-32 h-32 object-cover rounded-md border border-gray-300" />
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveImage(index)}
-                                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                    className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
                                 >
-                                    <FaTimes />
+                                    &times;
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={() => handleImageTitleEdit(index)}
-                                    className="absolute bottom-2 right-2 bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600"
-                                >
-                                    <IoMdAdd />
-                                </button>
-                                {editingImageIndex === index && (
-                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                        <input
-                                            type="text"
-                                            value={imagen.tituloImg}
-                                            onChange={(e) => handleImageTitleChange(index, e.target.value)}
-                                            onBlur={() => handleImageTitleSave(index, imagen.tituloImg)}
-                                            className="w-3/4 p-2 rounded"
-                                            placeholder="Título de la imagen"
-                                            autoFocus
-                                        />
+                                {editingImageIndex === index ? (
+                                    <input
+                                        type="text"
+                                        value={img.tituloImg}
+                                        onChange={(e) => handleImageTitleChange(index, e.target.value)}
+                                        onBlur={() => handleImageTitleSave(index, img.tituloImg)}
+                                        className="absolute bottom-0 left-0 w-full border border-gray-300 p-1 bg-white dark:bg-gray-800"
+                                    />
+                                ) : (
+                                    <div
+                                        onClick={() => handleImageTitleEdit(index)}
+                                        className="absolute bottom-0 left-0 w-full bg-gray-800 text-white text-center p-1 cursor-pointer"
+                                    >
+                                        {img.tituloImg || 'Agregar título'}
                                     </div>
                                 )}
                             </div>
                         ))}
                     </div>
-                )}
+                </div>
 
-                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                <div>
                     <button
-                        type="submit"
-                        className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:-translate-y-1"
+                        type="button"
+                        onClick={() => setMapModalOpen(true)}
+                        className="inline-flex items-center space-x-2 border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                     >
-                        Crear Publicación
+                        <FaMapMarkerAlt />
+                        <span>Agregar Ubicación</span>
                     </button>
                 </div>
+
+                <div>
+                    <button
+                        type="button"
+                        onClick={() => setPackageModalOpen(true)}
+                        className="inline-flex items-center space-x-2 border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    >
+                        <IoMdAdd />
+                        <span>Agregar Paquete</span>
+                    </button>
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full inline-flex items-center justify-center space-x-2 border border-gray-300 rounded-md px-4 py-2 bg-blue-500 text-white dark:bg-blue-600 dark:text-white hover:bg-blue-600 dark:hover:bg-blue-700"
+                >
+                    <span>Guardar Publicación</span>
+                </button>
             </form>
 
             {mapModalOpen && (
@@ -354,7 +344,7 @@ export default function Publicacion() {
 
             {isPackageModalOpen && (
                 <Modal onClose={() => setPackageModalOpen(false)}>
-                    <form onSubmit={handlePackageSubmit} className="space-y-6 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+                    <form onSubmit={handlePackageSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="nombre" className="block text-gray-700 dark:text-gray-200">Nombre del Paquete:</label>
                             <input
@@ -362,7 +352,7 @@ export default function Publicacion() {
                                 type="text"
                                 value={packageData.nombre}
                                 onChange={handlePackageChange}
-                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
                             />
                         </div>
                         <div>
@@ -372,7 +362,7 @@ export default function Publicacion() {
                                 type="date"
                                 value={packageData.fechaInicio}
                                 onChange={handlePackageChange}
-                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
                             />
                         </div>
                         <div>
@@ -382,14 +372,24 @@ export default function Publicacion() {
                                 type="date"
                                 value={packageData.fechaFin}
                                 onChange={handlePackageChange}
-                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="precio" className="block text-gray-700 dark:text-gray-200">Precio:</label>
+                            <input
+                                id="precio"
+                                type="number"
+                                value={packageData.precio}
+                                onChange={handlePackageChange}
+                                className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out"
+                            className="w-full inline-flex items-center justify-center space-x-2 border border-gray-300 rounded-md px-4 py-2 bg-green-500 text-white dark:bg-green-600 dark:text-white hover:bg-green-600 dark:hover:bg-green-700"
                         >
-                            Guardar Paquete
+                            <span>Guardar Paquete</span>
                         </button>
                     </form>
                 </Modal>
@@ -397,6 +397,5 @@ export default function Publicacion() {
 
             <Toaster />
         </div>
-
     );
 }

@@ -37,7 +37,8 @@ export default function Itinerario() {
     }
 
     return (
-        <div className='max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg'>
+        <div className='max-w-auto mx-auto p-8 bg-gray-50 shadow-lg rounded-lg bg-white dark:bg-gray-800'>
+            <div className='w-full max-w-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
             <h1 className="text-center text-2xl font-bold mb-4">Itinerarios</h1>
             <input
                 type='text'
@@ -52,7 +53,7 @@ export default function Itinerario() {
                     <table className='min-w-full divide-y divide-gray-200'>
                         <thead className='bg-gray-50'>
                             <tr>
-                                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>ID</th>
+                                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>ID</th>
                                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Nombre</th>
                                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Descripcion</th>
                                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Fecha de Inicio</th>
@@ -72,6 +73,7 @@ export default function Itinerario() {
                         </tbody>
                     </table>
                 )}
+                </div>
         </div>
     );
 }
