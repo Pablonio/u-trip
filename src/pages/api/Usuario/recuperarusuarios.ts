@@ -3,8 +3,18 @@ import {db} from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     if (req.method === 'GET'){
+        
+        const {search} = req.query;
+
         try{
             const usuarios = await db.usuario.findMany({
+                where: search ?{
+                    OR:[
+                        {nombre: {contains: search as string, mode: 'insensitive'}},
+                        {apellido: {contains: search as string, mode: 'insensitive'}},
+                        {email: {contains: search as string, mode: 'insensitive'}}
+                    ]
+                }:{},
                 select:{
                     id: true,
                     nombre: true,

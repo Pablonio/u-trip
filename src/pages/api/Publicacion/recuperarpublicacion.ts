@@ -1,3 +1,4 @@
+// pages/api/Publicacion/stream.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../lib/lib';
 
@@ -25,22 +26,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             emogiComentario: true,
                         },
                     },
-                    paquetesPaqueteTuristico: true,
-                    lugaresTuristicos: true,
                 },
             });
 
-            if (!publicaciones) {
-                return res.status(404).json({ success: false, error: 'Fallo al encontrar publicaciones' });
-            }
-
-            return res.status(200).json({ success: true, response: publicaciones });
+            res.status(200).json({ success: true, response: publicaciones });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ success: false, error: 'Fallo al obtener publicaciones' });
+            res.status(500).json({ error: 'Fallo al obtener publicaciones' });
         }
     } else {
-        return res.status(405).json({ error: 'Método no permitido' });
+        res.status(405).json({ error: 'Método no permitido' });
     }
 }
-

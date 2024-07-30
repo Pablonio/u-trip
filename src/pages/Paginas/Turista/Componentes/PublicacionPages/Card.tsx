@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import Emogis from '../../../../../dictionaryEmogis/Emogis';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import CardHeader from './Componentes/CardHeader';
+import ImageGallery from './Componentes/ImageGallery';
+import ReactionSection from './Componentes/ReactionSection';
+import ActionButtons from './Componentes/ActionButton';
+import CommentSection from './Componentes/CommentSection';
+import EmojiPicker from './Componentes/EmojisPicker';
+import ReactionModal from './Componentes/ReactionModal';
+import CommentModal from './Componentes/CommentModal';
 import { Publicacion } from './Publicaciones';
-import { FaSmile } from 'react-icons/fa';
+import Emogis from '../../../../../dictionaryEmogis/Emogis';
 
 type EmogisType = typeof Emogis;
 type EmogisKey = keyof EmogisType;
@@ -9,119 +18,177 @@ type EmogisKey = keyof EmogisType;
 type CardProps = {
     publicacion: Publicacion;
     onClick: () => void;
+    isDetailedView?: boolean;
 };
 
-const Card: React.FC<CardProps> = ({ publicacion, onClick }) => {
+const Card: React.FC<CardProps> = ({ publicacion, onClick, isDetailedView = false }) => {
     const [showEmojis, setShowEmojis] = useState(false);
     const [hoveredEmoji, setHoveredEmoji] = useState<string | null>(null);
+    const [newComment, setNewComment] = useState('');
+    const [commentError, setCommentError] = useState('');
+    const [showReactionModal, setShowReactionModal] = useState(false);
+    const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
+    const [showCommentModal, setShowCommentModal] = useState(false);
 
     const getEmoji = (reaccion: string) => {
         const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey].significado === reaccion);
         return emojiKey ? Emogis[emojiKey as unknown as EmogisKey].emo : reaccion;
     };
 
-    const handleEmojiClick = (emogi: string) => {
+    const handleEmojiClick = async (emogi: string) => {
         console.log('Significado del emoji:', emogi);
+
+        const reaccion = emogi;
+        const idPublicacion = publicacion.id;
+        const idUsuario = parseInt(Cookies.get('idUsuario') || '0');
+
+        if (!idUsuario) {
+            console.error('Usuario no autenticado');
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/Reacciones/crearReacciones', {
+                idPublicacion,
+                idUsuario,
+                reaccion
+            });
+
+            if (response.data.success) {
+                console.log('Reacción registrada correctamente', response.data.response);
+            } else {
+                console.error('Error al registrar la reacción:', response.data.error);
+            }
+        } catch (error) {
+            console.error('Error al registrar la reacción:', error);
+        }
+
         setShowEmojis(false);
     };
 
     const handleEmojiMouseEnter = (emogi: string) => {
         setHoveredEmoji(emogi);
-        console.log('Significado del emoji:', emogi);
     };
 
     const handleEmojiMouseLeave = () => {
         setHoveredEmoji(null);
     };
 
-    return (
-        <div className="mb-6 p-4 bg-white rounded-lg shadow relative">
-            <h2 className="text-2xl font-semibold mb-2">{publicacion.tituloPost}</h2>
-            <p className="text-gray-600 mb-1">Fecha de Publicación: {publicacion.fechaPublicacion}</p>
-            <p className="text-gray-600 mb-1">
-                Autor: {publicacion.usuario.nombre} {publicacion.usuario.apellido}
-            </p>
+    const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewComment(e.target.value);
+        setCommentError('');
+    };
 
-            {/* Mostrar Imágenes */}
-            {publicacion.Imagen.length > 0 && (
-                <div className="mt-4">
-                    <h3 className="text-xl font-semibold mb-2">Imágenes:</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {publicacion.Imagen.map((imagen) => (
-                            <div key={imagen.id} className="relative">
-                                <img
-                                    src={imagen.url}
-                                    alt={imagen.tituloImg || 'Imagen'}
-                                    className="w-full h-auto object-cover rounded-lg shadow-md"
-                                />
-                                {imagen.tituloImg && (
-                                    <p className="absolute bottom-2 left-2 text-white bg-gray-800 bg-opacity-60 p-1 rounded">
-                                        {imagen.tituloImg}
-                                    </p>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
+    const handleCommentSubmit = async () => {
+        const idUsuario = parseInt(Cookies.get('idUsuario') || '0');
+
+        if (!idUsuario) {
+            console.error('Usuario no autenticado');
+            return;
+        }
+
+        if (!newComment.trim()) {
+            setCommentError('El comentario no puede estar vacío.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/Comentario/crearComentario', {
+                idPublicacion: publicacion.id,
+                idUsuario,
+                texto: newComment
+            });
+
+            if (response.data.success) {
+                console.log('Comentario registrado correctamente', response.data.response);
+                // Aquí deberías actualizar el estado de los comentarios
+                setNewComment('');
+                closeCommentModal();
+            } else {
+                console.error('Error al registrar el comentario:', response.data.error);
+            }
+        } catch (error) {
+            console.error('Error al registrar el comentario:', error);
+        }
+    };
+
+    const groupedReactions = publicacion.reacciones.reduce((acc, reaccion) => {
+        const emoji = getEmoji(reaccion.reaccion);
+        if (!acc[emoji]) {
+            acc[emoji] = { count: 0, usuarios: [] };
+        }
+        acc[emoji].count++;
+        acc[emoji].usuarios.push(`${reaccion.usuario.nombre} ${reaccion.usuario.apellido}`);
+        return acc;
+    }, {} as Record<string, { count: number, usuarios: string[] }>);
+
+    const openReactionModal = (emoji: string) => {
+        setSelectedEmoji(emoji);
+        setShowReactionModal(true);
+    };
+
+    const closeReactionModal = () => {
+        setShowReactionModal(false);
+        setSelectedEmoji(null);
+    };
+
+    const openCommentModal = () => {
+        setShowCommentModal(true);
+    };
+
+    const closeCommentModal = () => {
+        setShowCommentModal(false);
+    };
+
+    return (
+        <div className="mb-6 p-4 bg-white rounded-lg shadow overflow-auto">
+            <CardHeader
+                tituloPost={publicacion.tituloPost}
+                fechaPublicacion={publicacion.fechaPublicacion}
+                autor={publicacion.usuario}
+            />
+
+            <ImageGallery images={publicacion.Imagen} onClick={onClick} />
+
+            <ReactionSection
+                groupedReactions={groupedReactions}
+                openReactionModal={openReactionModal}
+            />
+
+            <ActionButtons
+                onReactionClick={() => setShowEmojis(!showEmojis)}
+                onCommentClick={openCommentModal}
+            />
+
+            {showEmojis && (
+                <EmojiPicker
+                    emojis={publicacion.emogisParaReaccionarPublicacion}
+                    onEmojiClick={handleEmojiClick}
+                    hoveredEmoji={hoveredEmoji}
+                    onEmojiMouseEnter={handleEmojiMouseEnter}
+                    onEmojiMouseLeave={handleEmojiMouseLeave}
+                />
             )}
 
-            {/* Mostrar Comentarios */}
-            <div className="mt-4">
-                <h3 className="text-xl font-semibold mb-2">Comentarios:</h3>
-                <ul className="list-disc list-inside ml-4">
-                    {publicacion.comentarios.map((comentario) => (
-                        <li key={comentario.id} className="mb-2">
-                            <p className="text-gray-800">{comentario.texto}</p>
-                            <p className="text-gray-600">Fecha de Publicación: {comentario.fechaPublicacion}</p>
-                            <p className="text-gray-600">
-                                Autor: {comentario.usuario.nombre} {comentario.usuario.apellido}
-                            </p>
-                            <div className="flex space-x-2">
-                                {comentario.reacciones.map((reaccion) => (
-                                    <span key={reaccion.id}>{getEmoji(reaccion.reaccion)}</span>
-                                ))}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            {isDetailedView && <CommentSection comments={publicacion.comentarios} />}
 
-            {/* Mostrar Reacciones */}
-            <div className="mt-4">
-                <h3 className="text-xl font-semibold mb-2">Reacciones:</h3>
-                <ul className="flex space-x-2">
-                    {publicacion.reacciones.map((reaccion) => (
-                        <li key={reaccion.id}>
-                            <span>{getEmoji(reaccion.reaccion)}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <ReactionModal
+                show={showReactionModal}
+                onClose={closeReactionModal}
+                selectedEmoji={selectedEmoji}
+                users={groupedReactions[selectedEmoji || '']?.usuarios || []}
+            />
 
-            {/* Mostrar Emogis Preestablecidos para Reaccionar */}
-            <div className="mt-4 relative">
-                <h3 className="text-xl font-semibold mb-2">Reaccionar:</h3>
-                <FaSmile
-                    onClick={() => setShowEmojis(!showEmojis)}
-                    className="text-3xl cursor-pointer"
-                />
-                {showEmojis && (
-                    <div className="absolute top-0 left-0 mt-10 bg-white border border-gray-300 rounded-lg shadow-lg p-2 flex space-x-2">
-                        {publicacion.emogisParaReaccionarPublicacion.map((emogi) => (
-                            <span 
-                                key={emogi.id}
-                                onClick={() => handleEmojiClick(emogi.emogi)}
-                                onMouseEnter={() => handleEmojiMouseEnter(emogi.emogi)}
-                                onMouseLeave={handleEmojiMouseLeave}
-                                className={`text-3xl cursor-pointer ${hoveredEmoji === emogi.emogi ? 'transform scale-125' : ''}`}
-                            >
-                                {getEmoji(emogi.emogi)}
-                            </span>
-                        ))}
-                    </div>
-                )}
-            </div>
+            <CommentModal
+                show={showCommentModal}
+                onClose={closeCommentModal}
+                newComment={newComment}
+                onCommentChange={handleCommentChange}
+                onCommentSubmit={handleCommentSubmit}
+                commentError={commentError}
+            />
         </div>
+
     );
 };
 

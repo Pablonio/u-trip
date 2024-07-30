@@ -3,7 +3,25 @@ import {db} from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
   if (req.method === "GET") {
+    const {search}=req.query;
     try {
+      const searchString = typeof search === 'string'?search.trim():'';
+      const searchConditions: any={};
+      if(searchString){
+        const[nombre, fechaInicio]=searchString.split(':');
+        if(nombre){
+          searchConditions.nombre={
+            contains: nombre,
+            mode: 'insensitive',
+          }
+        }
+        if(fechaInicio){
+          searchConditions.fechaInicio={
+            gte: new Date(fechaInicio).toISOString()
+          };
+        }
+      }
+      
       const itinerarios = await db.itinerarios.findMany({
         select: {
           id: true,

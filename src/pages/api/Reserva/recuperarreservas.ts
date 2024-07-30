@@ -3,8 +3,33 @@ import {db} from '../../../lib/lib';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     if (req.method === "GET") {
+        const {search} = req.query;
+        const searchTerm = typeof search === 'string'?search.trim():'';
         try{
             const reservas = await db.reserva.findMany({
+                where:{
+                    OR: [
+                        {
+                            estado: searchTerm ? searchTerm.toUpperCase() as any: undefined
+                        },
+                        {
+                            usuario: {
+                                nombre: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                }
+                            }
+                        },
+                        {
+                            paquete:{
+                                nombre: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                }
+                            }
+                        }
+                    ],
+                },
                 include: {
                     usuario: {
                         select: {

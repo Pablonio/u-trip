@@ -1,6 +1,7 @@
+// components/Publicacionesturista.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Card from './Card'; // Ajusta la ruta según la estructura de tu proyecto
+import Card from './Card';
 
 export type Publicacion = {
     id: number;
@@ -11,7 +12,7 @@ export type Publicacion = {
         nombre: string;
         apellido: string;
     };
-    Imagen: {  
+    Imagen: {
         id: number;
         url: string;
         tituloImg: string;
@@ -57,6 +58,7 @@ export type Publicacion = {
             flag: string;
         }[];
     }[];
+    reaccionConteo?: { [key: string]: number };
 };
 
 const Publicacionesturista: React.FC = () => {
@@ -65,30 +67,41 @@ const Publicacionesturista: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    const fetchPublicaciones = async () => {
+        try {
+            const response = await axios.get('/api/Publicacion/recuperarpublicacion');
+            const publicacionesData: Publicacion[] = response.data.response;
+
+            const publicacionesConConteo = publicacionesData.map((publicacion) => {
+                const reaccionConteo: { [key: string]: number } = {};
+                publicacion.reacciones.forEach(reaccion => {
+                    if (reaccionConteo[reaccion.reaccion]) {
+                        reaccionConteo[reaccion.reaccion]++;
+                    } else {
+                        reaccionConteo[reaccion.reaccion] = 1;
+                    }
+                });
+                return { ...publicacion, reaccionConteo };
+            });
+
+            setPublicaciones(publicacionesConConteo);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching publicaciones:', error);
+            setError('Error al obtener las publicaciones');
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const responsePublicaciones = await axios.get('/api/Publicacion/recuperarpublicacion');
-                console.log('Respuesta Publicaciones:', responsePublicaciones.data);
-                setPublicaciones(responsePublicaciones.data.response);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setError('Error al obtener las publicaciones');
-                setLoading(false);
-            }
+        fetchPublicaciones(); // Fetch initial data
+
+        const intervalId = setInterval(fetchPublicaciones, 5000); // Fetch data every 5 seconds
+
+        return () => {
+            clearInterval(intervalId); // Clean up interval on component unmount
         };
-
-        fetchData();
     }, []);
-
-    if (loading) {
-        return <p>Cargando...</p>;
-    }
-
-    if (error) {
-        return <p>{error}</p>;
-    }
 
     const handleCardClick = (publicacion: Publicacion) => {
         setSelectedPublicacion(publicacion);
@@ -98,20 +111,44 @@ const Publicacionesturista: React.FC = () => {
         setSelectedPublicacion(null);
     };
 
+    if (loading) {
+        return <p>Cargando...</p>;
+    }
+
+    if (error) {
+        return <p>{error}</p>;
+    }
+
     return (
         <div className="p-4 bg-gray-100 rounded-lg shadow-md max-w-7xl">
             <h1 className="text-3xl font-bold mb-4">Publicaciones</h1>
             {selectedPublicacion ? (
-                <div>
-                    <button onClick={handleBackClick} className="mb-4 px-4 py-2 bg-blue-500 text-white rounded">
+                <div className="flex flex-col items-center">
+                    <button 
+                        onClick={handleBackClick} 
+                        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    >
                         Volver a las publicaciones
                     </button>
-                    <Card publicacion={selectedPublicacion} onClick={() => {}} />
+                    <div className="w-full max-w-4xl">
+                        <Card 
+                            publicacion={selectedPublicacion} 
+                            onClick={() => {}}
+                            isDetailedView={true}
+                        />
+                    </div>
                 </div>
             ) : (
-                publicaciones.map((publicacion) => (
-                    <Card key={publicacion.id} publicacion={publicacion} onClick={() => handleCardClick(publicacion)} />
-                ))
+                <div className="flex flex-col space-y-4">
+                    {publicaciones.map((publicacion) => (
+                        <div key={publicacion.id} className="w-full max-w-4xl">
+                            <Card 
+                                publicacion={publicacion} 
+                                onClick={() => handleCardClick(publicacion)} 
+                            />
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );
