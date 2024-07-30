@@ -8,7 +8,7 @@ type ModalProps = {
     content: React.ReactNode;
 };
 
-const CustomModal: React.FC<ModalProps> = ({ show, onClose, title, content }) => {
+export default function CustomModal({ show, onClose, title, content }: ModalProps) {
     if (!show) return null; // No renderizar el modal si no se debe mostrar
 
     return (
@@ -27,4 +27,3 @@ const CustomModal: React.FC<ModalProps> = ({ show, onClose, title, content }) =>
     );
 };
 
-export default CustomModal;

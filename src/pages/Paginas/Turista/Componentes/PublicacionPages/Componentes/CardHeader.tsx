@@ -9,7 +9,7 @@ type CardHeaderProps = {
     };
 };
 
-const CardHeader: React.FC<CardHeaderProps> = ({ tituloPost, fechaPublicacion, autor }) => {
+export default function CardHeader({ tituloPost, fechaPublicacion, autor }: CardHeaderProps) {
     return (
         <div>
             <h2 className="text-2xl font-semibold mb-2">{tituloPost}</h2>
@@ -20,5 +20,3 @@ const CardHeader: React.FC<CardHeaderProps> = ({ tituloPost, fechaPublicacion, a
         </div>
     );
 };
-
-export default CardHeader;

@@ -13,7 +13,7 @@ type CommentSectionProps = {
     comments: Comment[];
 };
 
-const CommentSection: React.FC<CommentSectionProps> = ({ comments }) => {
+export default function CommentSection({ comments }: CommentSectionProps) {
     return (
         <div className="mt-4">
             <h3 className="text-xl font-semibold mb-2">Comentarios:</h3>
@@ -26,5 +26,3 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments }) => {
         </div>
     );
 };
-
-export default CommentSection;

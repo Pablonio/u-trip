@@ -12,7 +12,7 @@ type ReactionSectionProps = {
     openReactionModal: (emoji: string) => void;
 };
 
-const ReactionSection: React.FC<ReactionSectionProps> = ({ groupedReactions, openReactionModal }) => {
+export default function ReactionSection({ groupedReactions, openReactionModal }: ReactionSectionProps) {
     return (
         <div className="mt-4">
             <h3 className="text-xl font-semibold mb-2">Reacciones:</h3>
@@ -27,5 +27,3 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({ groupedReactions, ope
         </div>
     );
 };
-
-export default ReactionSection;

@@ -10,7 +10,7 @@ interface NavBarProps {
     toggleSidebar: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ handleNavbar, navItems, toggleSidebar }) => {
+export default function NavBar({ handleNavbar, navItems, toggleSidebar }: NavBarProps) {
 
     const router = useRouter();
     const handleSalir = () => {
@@ -52,4 +52,4 @@ const NavBar: React.FC<NavBarProps> = ({ handleNavbar, navItems, toggleSidebar }
     );
 };
 
-export default NavBar;
+

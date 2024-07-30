@@ -12,13 +12,13 @@ type EmojiPickerProps = {
     onEmojiMouseLeave: () => void;
 };
 
-const EmojiPicker: React.FC<EmojiPickerProps> = ({
+export default function EmojiPicker({
     emojis,
     onEmojiClick,
     hoveredEmoji,
     onEmojiMouseEnter,
     onEmojiMouseLeave
-}) => {
+}: EmojiPickerProps) {
     const getEmoji = (reaccion: string) => {
         const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey].significado === reaccion);
         return emojiKey ? Emogis[emojiKey as unknown as EmogisKey].emo : reaccion;
@@ -39,6 +39,4 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({
             ))}
         </div>
     );
-};
-
-export default EmojiPicker;
+}

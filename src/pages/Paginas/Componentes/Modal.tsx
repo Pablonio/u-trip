@@ -6,7 +6,7 @@ interface ModalProps {
     onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+export default function Modal({ children, onClose }: ModalProps) {  
     return ReactDOM.createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-lg p-4 max-w-md w-full">
@@ -24,5 +24,3 @@ const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
         document.body
     );
 };
-
-export default Modal;

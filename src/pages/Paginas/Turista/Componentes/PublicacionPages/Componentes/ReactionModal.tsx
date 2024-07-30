@@ -8,7 +8,7 @@ type ReactionModalProps = {
     users: string[];
 };
 
-const ReactionModal: React.FC<ReactionModalProps> = ({ show, onClose, selectedEmoji, users }) => {
+export default function ReactionModal({ show, onClose, selectedEmoji, users }: ReactionModalProps) {
     return (
         <CustomModal
             show={show}
@@ -27,5 +27,3 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ show, onClose, selectedEm
         />
     );
 };
-
-export default ReactionModal;

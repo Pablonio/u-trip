@@ -61,7 +61,7 @@ export type Publicacion = {
     reaccionConteo?: { [key: string]: number };
 };
 
-const Publicacionesturista: React.FC = () => {
+export default function Publicacionesturista() {
     const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
     const [selectedPublicacion, setSelectedPublicacion] = useState<Publicacion | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -153,5 +153,3 @@ const Publicacionesturista: React.FC = () => {
         </div>
     );
 };
-
-export default Publicacionesturista;

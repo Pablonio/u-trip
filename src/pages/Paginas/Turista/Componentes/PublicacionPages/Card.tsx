@@ -21,7 +21,7 @@ type CardProps = {
     isDetailedView?: boolean;
 };
 
-const Card: React.FC<CardProps> = ({ publicacion, onClick, isDetailedView = false }) => {
+export default function Card({ publicacion, onClick, isDetailedView = false }: CardProps) {
     const [showEmojis, setShowEmojis] = useState(false);
     const [hoveredEmoji, setHoveredEmoji] = useState<string | null>(null);
     const [newComment, setNewComment] = useState('');
@@ -191,5 +191,3 @@ const Card: React.FC<CardProps> = ({ publicacion, onClick, isDetailedView = fals
 
     );
 };
-
-export default Card;

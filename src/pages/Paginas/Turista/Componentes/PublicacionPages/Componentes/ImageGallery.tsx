@@ -12,7 +12,7 @@ type ImageGalleryProps = {
     onClick: () => void;
 };
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onClick }) => {
+export default function ImageGallery({ images, onClick }: ImageGalleryProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -122,6 +122,4 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onClick }) => {
         </div>
     );
 };
-
-export default ImageGallery;
 

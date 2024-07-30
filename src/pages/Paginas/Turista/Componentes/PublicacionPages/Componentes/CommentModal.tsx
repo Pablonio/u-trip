@@ -10,14 +10,14 @@ type CommentModalProps = {
     commentError: string;
 };
 
-const CommentModal: React.FC<CommentModalProps> = ({
+export default function CommentModal({
     show,
     onClose,
     newComment,
     onCommentChange,
     onCommentSubmit,
     commentError
-}) => {
+}: CommentModalProps) {
     return (
         <CustomModal
             show={show}
@@ -44,5 +44,3 @@ const CommentModal: React.FC<CommentModalProps> = ({
         />
     );
 };
-
-export default CommentModal;

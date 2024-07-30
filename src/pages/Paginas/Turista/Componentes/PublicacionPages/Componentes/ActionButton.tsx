@@ -6,7 +6,7 @@ type ActionButtonsProps = {
     onCommentClick: () => void;
 };
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({ onReactionClick, onCommentClick }) => {
+export default function ActionButtons({ onReactionClick, onCommentClick }: ActionButtonsProps) {
     return (
         <div className="flex items-center space-x-4 mt-4">
             <button className="flex items-center space-x-1" onClick={onReactionClick}>
@@ -24,5 +24,3 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onReactionClick, onCommen
         </div>
     );
 };
-
-export default ActionButtons;
