@@ -3,7 +3,7 @@ import { db } from '../../../lib/lib';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key'; // Ensure to set this in your environment variables
+const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key'; // Asegúrate de configurar esto en tus variables de entorno
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -24,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           nombre,
           apellido,
           email,
-          contrasena: hashedPassword, 
-          confirmarContrasena: hashedPassword,
+          contrasena: hashedPassword,
+          confirmarContrasena: hashedPassword
         }
       });
 

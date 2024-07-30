@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { AiTwotoneReconciliation, AiTwotoneSchedule, AiOutlineMenu } from "react-icons/ai";
+import { AiTwotoneReconciliation, AiOutlineMenu } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
 import PerfilUsuario from '../Componentes/Perfil';
-import Publicaciones from './Componentes/PublicacionPages/Publicaciones';
 import ToggleDarkWhite from '../Componentes/ToggleDarkWhite';
 
 export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
     const handleNavbar = (event: React.MouseEvent<HTMLSpanElement, MouseEvent> | null) => {
         if (event) {
             setComponenteSeleccionado(event.currentTarget.id);
+            setMostrarPerfil(false); // Ocultar perfil si se selecciona otro componente
         }
     };
 
@@ -20,15 +21,19 @@ export default function Feed() {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
+    const handlePerfilClick = () => {
+        setMostrarPerfil(true);
+        setComponenteSeleccionado("Perfil"); // Cambiar el componente seleccionado a "Perfil"
+    };
+
     const turistaNavBar = [
-        { id: "Bienvenido", icon: <AiTwotoneReconciliation className='size-8' />, label: "Itinerarios" },
-        { id: "Perfil", icon: <AiTwotoneSchedule className='size-8' />, label: "Reservas" }
+        { id: "Bienvenido", icon: <AiTwotoneReconciliation className='size-8' />, label: "Itinerarios" }
     ];
 
     const renderizadoComponente = () => {
         switch (componenteSeleccionado) {
             case "Bienvenido":
-                return <Publicaciones />;
+                return <PaginaInicial />;
             case "Perfil":
                 return <PerfilUsuario />;
             default:
@@ -43,6 +48,7 @@ export default function Feed() {
                     navItems={turistaNavBar} 
                     handleNavbar={handleNavbar} 
                     toggleSidebar={toggleSidebar} 
+                    onPerfilClick={handlePerfilClick} 
                 />
             )}
             
@@ -69,4 +75,3 @@ export default function Feed() {
         </div>
     );
 }
- 

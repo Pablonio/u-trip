@@ -24,18 +24,18 @@ export default function CommentModal({
             onClose={onClose}
             title="Agregar Comentario"
             content={
-                <div>
+                <div className="p-4 sm:p-6 md:p-8 lg:p-10 dark:bg-gray-800 dark:text-gray-200">
                     <input
                         type="text"
                         value={newComment}
                         onChange={onCommentChange}
                         placeholder="Escribe tu comentario"
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                     />
-                    {commentError && <p className="text-red-600">{commentError}</p>}
+                    {commentError && <p className="text-red-600 dark:text-red-400">{commentError}</p>}
                     <button
                         onClick={onCommentSubmit}
-                        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                         Enviar
                     </button>
@@ -43,4 +43,4 @@ export default function CommentModal({
             }
         />
     );
-};
+}
