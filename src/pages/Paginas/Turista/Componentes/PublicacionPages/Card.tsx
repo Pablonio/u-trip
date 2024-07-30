@@ -30,13 +30,15 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
     const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
     const [showCommentModal, setShowCommentModal] = useState(false);
 
+    // Manejar la obtención de emojis
     const getEmoji = (reaccion: string) => {
-        if (!Emogis) return reaccion;  // Verifica que Emogis esté definido
+        if (!Emogis) return reaccion; // Verifica que Emogis esté definido
 
         const emojiKey = Object.keys(Emogis).find(key => Emogis[key as unknown as EmogisKey]?.significado === reaccion);
         return emojiKey ? Emogis[emojiKey as unknown as EmogisKey]?.emo : reaccion;
     };
 
+    // Manejar clic en emoji
     const handleEmojiClick = async (emogi: string) => {
         console.log('Significado del emoji:', emogi);
 
@@ -113,8 +115,8 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
         }
     };
 
-    // Asegúrate de que publicacion.reacciones esté definido y es un array
-    const groupedReactions = (publicacion.reacciones || []).reduce((acc, reaccion) => {
+    // Asegúrate de que publicacion y publicacion.reacciones estén definidos y es un array
+    const groupedReactions = (publicacion && publicacion.reacciones ? publicacion.reacciones : []).reduce((acc, reaccion) => {
         if (!reaccion || !reaccion.reaccion) return acc; // Verifica si reaccion es válida
         const emoji = getEmoji(reaccion.reaccion);
         if (!acc[emoji]) {
@@ -151,7 +153,7 @@ export default function Card({ publicacion, onClick, isDetailedView = false }: C
                 autor={publicacion.usuario}
             />
 
-            <ImageGallery images={publicacion.Imagen} onClick={onClick} />
+            <ImageGallery images={publicacion.Imagen || []} onClick={onClick} />
 
             <ReactionSection
                 groupedReactions={groupedReactions}
