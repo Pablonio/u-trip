@@ -9,6 +9,7 @@ export default function PerfilUsuario(){
     const [email, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
     const [direccion, setDireccion] = useState('');
+    const [fechaNacimiento, setFechaNacimiento] = useState<string | null>(null);
     const [fotoPerfil, setFotoPerfil] = useState('');
     const [sexo, setSexo] = useState('');
     const id = Cookie.get('idUsuario');
@@ -26,6 +27,7 @@ export default function PerfilUsuario(){
                 setEmail(response.data.response.email);
                 setTelefono(response.data.response.telefono);
                 setDireccion(response.data.response.direccion);
+                setFechaNacimiento(response.data.response.fechaNacimiento ? new Date(response.data.response.fechaNacimiento).toLocaleDateString():null);
                 setFotoPerfil(response.data.response.fotoPerfil);
                 setSexo(response.data.response.sexo);
 
@@ -36,7 +38,7 @@ export default function PerfilUsuario(){
         };
 
         fetchData();
-    }, []);
+    }, [idUser]);
 
 
 
@@ -52,6 +54,7 @@ export default function PerfilUsuario(){
                         <p>Email: {email}</p>
                         <p>Telefono: {telefono? telefono: 'Actualiza tus datos'}</p>
                         <p>Direccion: {direccion? direccion: 'Actualiza tus datos'}</p>
+                        <p>Fecha de Nacimiento: {fechaNacimiento || 'Actualiza tus datos'}</p>
                     </div>
                 </div>
             </div>
