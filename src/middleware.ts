@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { parse } from 'cookie';
 
-const allowedOrigins = ['https://example.com', 'https://another-domain.com']; // Replace with your allowed origins
+const allowedOrigins = [ 'https://www.u-trip.online']; // Replace with your allowed origins
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
