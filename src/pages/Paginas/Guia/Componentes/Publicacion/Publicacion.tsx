@@ -199,8 +199,9 @@ export default function Publicacion() {
                 if (formData.paquete.length > 0) {
                     for (const paquete of formData.paquete) {
                         await axios.post('/api/Paquete/crearPaquete', {
-                            idPublicacion,
+                            idPublicacion: idPublicacion,
                             ...paquete
+                            
                         });
                     }
                 }

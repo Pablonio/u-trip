@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiTwotoneReconciliation, AiOutlineMenu } from "react-icons/ai";
 import NavBar from '../Componentes/NavBar'; 
 import PaginaInicial from './Componentes/PaginaInicial';
@@ -9,6 +9,18 @@ export default function Feed() {
     const [componenteSeleccionado, setComponenteSeleccionado] = useState("Bienvenido");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [mostrarPerfil, setMostrarPerfil] = useState(false);
+
+    // Bloquear el desplazamiento del fondo cuando el sidebar está abierto
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto'; // Limpiar en caso de desmontaje
+        };
+    }, [isSidebarOpen]);
 
     const handleNavbar = (event: React.MouseEvent<HTMLSpanElement, MouseEvent> | null) => {
         if (event) {
@@ -57,7 +69,7 @@ export default function Feed() {
                 <ToggleDarkWhite />
             </div>
 
-            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} p-4 `}>
+            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} p-4`}>
                 {renderizadoComponente()}
             </div>
 
