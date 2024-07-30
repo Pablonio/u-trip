@@ -207,7 +207,7 @@ model PaqueteTuristico{
   fechaFin DateTime
   idPublicacion Int
   publicacion Publicacion @relation(fields: [idPublicacion], references: [id])
-  precio Int
+  precio Int @default(0)
   estadoPaquete EstadoPaquete @default(ACTIVO)
   flag Estado @default(Nuevo)
 }
@@ -225,7 +225,7 @@ model Reserva{
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   estado EstadoReserva @default(ACEPTADA)
   itinerarios Itinerarios[]
-  deuda Int
+  deuda Int @default(0)
   estadoDeuda EstadoDeuda @default(PENDIENTE)
   saldado Boolean @default(false)
   fechaReserva DateTime @default(now())
