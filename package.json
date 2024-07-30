@@ -15,10 +15,12 @@
     "@react-email/render": "^0.0.16",
     "@types/leaflet": "^1.9.12",
     "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
     "cookie": "^0.6.0",
     "date-fns": "^3.6.0",
     "formidable": "^3.5.1",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "next": "14.2.5",
     "nextjs-cors": "^2.2.0",
@@ -36,8 +38,10 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/formidable": "^3.4.5",
     "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
