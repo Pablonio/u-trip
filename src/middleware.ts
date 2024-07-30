@@ -17,9 +17,24 @@ export async function middleware(request: NextRequest) {
 
   const userRoles: (keyof typeof protectedRoutes)[] = ['INCOGNITO', 'TURISTA', 'GUIA', 'ADMINISTRADOR', 'BANEADO'];
 
+  const response = NextResponse.next();
+
+  // Configura los encabezados de CORS
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: response.headers,
+    });
+  }
+
   if (!role || role === 'INCOGNITO') {
     if (protectedRoutes.INCOGNITO.some(route => request.nextUrl.pathname.startsWith(route))) {
-      return NextResponse.next();
+      return response;
     } else {
       return NextResponse.redirect(new URL('/Error404', request.url));
     }
@@ -29,7 +44,7 @@ export async function middleware(request: NextRequest) {
     const userRoutes = protectedRoutes[role as keyof typeof protectedRoutes];
 
     if (userRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
-      return NextResponse.next();
+      return response;
     } else {
       return NextResponse.redirect(new URL(userRoutes[0], request.url));
     }
